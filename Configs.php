@@ -11,8 +11,8 @@ session_start();
 try {
     ParseClient::initialize(
         'ASNNDrrmNIHFyedPSwEgWiKYzQWnT6J6JRUA98pL',
-        'wQp4biPrV8DByDYHWzMichuNenrFEiXmZyGeCwrT',
-        'dKpMVT8xi0TeCLFSriAo6taqZ5QqhAXcghPuSzxH'
+        'RAQX4zeCujTIuMU8p20neBYAsBLGwpf5xG7fyl0U',
+        'LpNKoSI7eDnLCYcz1pstHtJJbnuk3mJfv0nQJwbP'
     );
     ParseClient::setServerURL('https://parseapi.back4app.com/', '/');
     ParseClient::setStorage(new ParseSessionStorage());
