@@ -2,12 +2,11 @@
 require '../vendor/autoload.php';
 include '../Configs.php';
 
-use Parse\ParseUser;
 use Parse\ParseException;
+use Parse\ParseUser;
 
 $currUser = ParseUser::getCurrentUser();
 if ($currUser) {
-
     try {
         if ($currUser->get("role") === 'admin') {
             header('Refresh:0; url=../dashboard/panel.php');
@@ -16,14 +15,11 @@ if ($currUser) {
         }
     } catch (Exception $e) {
     }
-
-
 }
 
 
 // LOGIN ------------------------------------------
-if(isset($_POST['username']) && isset($_POST['password'])) {
-
+if (isset($_POST['username']) && isset($_POST['password'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -31,25 +27,25 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
         $user = ParseUser::logIn($username, $password);
 
         $currUser = ParseUser::getCurrentUser();
-        if ($currUser->get("role") === 'admin'){
-            { header('Refresh:0; url=../dashboard/panel.php'); }
-
+        if ($currUser->get("role") === 'admin') {
+            {
+                header('Refresh:0; url=../dashboard/panel.php');
+            }
         } else {
-
             showSweetAlert("Error!", "You are not authorized", "error");
 
-            { header('Refresh:0; url=../auth/logout.php'); }
+            {
+                header('Refresh:0; url=../auth/logout.php');
+            }
         }
 
         showSweetAlert("Success!", "Logged In, Wait...", "success");
 
         // error
     } catch (ParseException $error) {
-
         $e = $error->getMessage();
 
         showSweetAlert("Error!", $e, "error");
-
     } catch (Exception $e) {
     }
 }
@@ -94,22 +90,22 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
             </div>
 
             <form method="post" class="login100-form validate-form">
-					<span class="login100-form-title">Heyto Live Admin Panel Please Login</span>
+                <span class="login100-form-title">TrystMe Live Admin Panel Please Login</span>
 
-                <div class="wrap-input100 validate-input" data-validate = "Email empty">
+                <div class="wrap-input100 validate-input" data-validate="Email empty">
                     <input class="input100" type="text" name="username" placeholder="Email">
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">
-							<i class="fa fa-user" aria-hidden="true"></i>
-						</span>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </span>
                 </div>
 
-                <div class="wrap-input100 validate-input" data-validate = "Password empty">
+                <div class="wrap-input100 validate-input" data-validate="Password empty">
                     <input class="input100" type="password" name="password" placeholder="Password">
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">
-							<i class="fa fa-lock" aria-hidden="true"></i>
-						</span>
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                        </span>
                 </div>
 
                 <div class="container-login100-form-btn">
@@ -117,7 +113,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
                 </div>
 
                 <div class="text-center p-t-12">
-						<span class="txt1">Forgot</span>
+                    <span class="txt1">Forgot</span>
                     <a class="txt2" href="recover.php">Username or password?</a>
                 </div>
 
