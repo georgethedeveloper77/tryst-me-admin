@@ -16,9 +16,9 @@ class ParseCloud
     /**
      * Makes a call to a Cloud function.
      *
-     * @param string $name         Cloud function name
-     * @param array  $data         Parameters to pass
-     * @param bool   $useMasterKey Whether to use the Master Key
+     * @param string $name Cloud function name
+     * @param array $data Parameters to pass
+     * @param bool $useMasterKey Whether to use the Master Key
      *
      * @return mixed
      */
@@ -30,7 +30,7 @@ class ParseCloud
         }
         $response = ParseClient::_request(
             'POST',
-            'functions/'.$name,
+            'functions/' . $name,
             $sessionToken,
             json_encode(ParseClient::_encode($data, false)),
             $useMasterKey
@@ -60,15 +60,15 @@ class ParseCloud
     /**
      * Starts a given cloud job, which will process asynchronously
      *
-     * @param string $jobName   Name of job to run
-     * @param array $data       Parameters to pass
+     * @param string $jobName Name of job to run
+     * @param array $data Parameters to pass
      * @return string           Id for tracking job status
      */
     public static function startJob($jobName, $data = [])
     {
         $response = ParseClient::_request(
             'POST',
-            'jobs/'.$jobName,
+            'jobs/' . $jobName,
             null,
             json_encode(ParseClient::_encode($data, false)),
             true,
@@ -83,7 +83,7 @@ class ParseCloud
     /**
      * Gets job status by id
      *
-     * @param string $jobStatusId   Id of the job status to return
+     * @param string $jobStatusId Id of the job status to return
      * @return array|ParseObject
      */
     public static function getJobStatus($jobStatusId)

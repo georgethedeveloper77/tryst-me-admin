@@ -1,14 +1,14 @@
 <?php
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
-use Parse\ParseQuery;
-use Parse\ParseUser;
 use Parse\ParseException;
+use Parse\ParseQuery;
 
 // Update data ------------------------------------------------
-if(isset($_POST['status'])){
+if (isset($_POST['status'])) {
     $status = $_POST['status'];
 
     $adObjID = $_GET['objectId'];
@@ -24,7 +24,7 @@ if(isset($_POST['status'])){
 
     try {
         $payout->set("status", $status);
-        if ($status === "completed"){
+        if ($status === "completed") {
             $payout->set("completed", true);
 
         } else {
@@ -70,11 +70,11 @@ $account_name = $currPayout->get('account_name');
 // Get Method
 $method = $currPayout->get('method');
 
-if ($method === "payoneer"){
+if ($method === "payoneer") {
     $destination = $currPayout->get('email');
     $fromName = $currPayout->get('author')->get('name');
 
-} else if ($method === "IBAN"){
+} else if ($method === "IBAN") {
     $destination = sprintf("%s: %s ", $bank_name, $iban);
     $fromName = $account_name;
 
@@ -84,7 +84,7 @@ if ($method === "payoneer"){
 }
 
 $status = $currPayout->get('status');
-if ($status === "pending"){
+if ($status === "pending") {
     $status1 = "Pending";
     $status2 = "Processing";
     $status3 = "Completed";
@@ -94,7 +94,7 @@ if ($status === "pending"){
     $statusValue3 = "completed";
 
 
-} else if ($status === "processing"){
+} else if ($status === "processing") {
     $status1 = "Processing";
     $status2 = "Completed";
     $status3 = "Pending";
@@ -114,7 +114,7 @@ if ($status === "pending"){
 
 }
 
-$_SESSION['status']   = $status;
+$_SESSION['status'] = $status;
 
 ?>
 
@@ -122,7 +122,7 @@ $_SESSION['status']   = $status;
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Payouts </h3> </div>
+            <h3 class="text-primary">Payouts </h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Payouts</a></li>
@@ -150,20 +150,20 @@ $_SESSION['status']   = $status;
                         <div class="form-group row">
                             <label for="fullname" class="col-sm-2 col-form-label">Author/Account <span class="text-danger"></span> </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="fullname" name="fullname" value="'.$fromName.'" disabled="true">
+                                <input type="text" class="form-control" id="fullname" name="fullname" value="' . $fromName . '" disabled="true">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="username" class="col-sm-2 col-form-label">Amount <span class="text-danger"></span> </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="amount" name="amount" value="'.$amount_current.'" disabled="true">
+                                <input type="text" class="form-control" id="amount" name="amount" value="' . $amount_current . '" disabled="true">
                             </div>
                         </div>
                         
                             <div class="form-group row">
                                 <label class="col-lg-2 col-form-label" for="method">Method <span class="text-danger"></span></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="method" value="'.$method.'" name="method" disabled="true">
+                                    <input type="text" class="form-control" id="method" value="' . $method . '" name="method" disabled="true">
                                 </div>
                             </div>
                             
@@ -171,17 +171,17 @@ $_SESSION['status']   = $status;
                                 <label class="col-lg-2 col-form-label" for="birthday">Destination <span class="text-danger"></span></label>
                                
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="destination" value="'.$destination.'" name="destination" disabled="true">
+                                    <input type="text" class="form-control" id="destination" value="' . $destination . '" name="destination" disabled="true">
                                 </div>
                             </div>
                         
                             <div class="form-group row">
                                 <label class="col-lg-2 col-form-label" for="status">Payout Status <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" id="status" name="status" data-value="'.$status.'">
-                                        <option value="'.$statusValue1.'">'.$status1.'</option>
-                                        <option value="'.$statusValue2.'">'.$status2.'</option>
-                                        <option value="'.$statusValue3.'">'.$status3.'</option>
+                                    <select class="form-control" id="status" name="status" data-value="' . $status . '">
+                                        <option value="' . $statusValue1 . '">' . $status1 . '</option>
+                                        <option value="' . $statusValue2 . '">' . $status2 . '</option>
+                                        <option value="' . $statusValue3 . '">' . $status3 . '</option>
                                     </select>
                                 </div>
                             </div>

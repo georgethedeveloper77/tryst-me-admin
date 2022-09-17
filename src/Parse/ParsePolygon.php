@@ -33,6 +33,16 @@ class ParsePolygon implements Encodable
     }
 
     /**
+     * Returns the Coordinates value for this Polygon.
+     *
+     * @return array
+     */
+    public function getCoordinates()
+    {
+        return $this->coordinates;
+    }
+
+    /**
      * Set the Coordinates value for this Polygon.
      *
      * @param array $coords GeoPoints or Coordinates.
@@ -63,16 +73,6 @@ class ParsePolygon implements Encodable
     }
 
     /**
-     * Returns the Coordinates value for this Polygon.
-     *
-     * @return array
-     */
-    public function getCoordinates()
-    {
-        return $this->coordinates;
-    }
-
-    /**
      * Encode to associative array representation.
      *
      * @return array
@@ -80,8 +80,8 @@ class ParsePolygon implements Encodable
     public function _encode()
     {
         return [
-            '__type'    => 'Polygon',
-            'coordinates'  => $this->coordinates,
+            '__type' => 'Polygon',
+            'coordinates' => $this->coordinates,
         ];
     }
 }

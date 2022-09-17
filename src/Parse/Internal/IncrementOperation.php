@@ -33,16 +33,6 @@ class IncrementOperation implements FieldOperation
     }
 
     /**
-     * Get the value for this operation.
-     *
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
      * Get an associative array encoding for this operation.
      *
      * @return array
@@ -55,13 +45,13 @@ class IncrementOperation implements FieldOperation
     /**
      * Apply the current operation and return the result.
      *
-     * @param mixed  $oldValue Value prior to this operation.
-     * @param mixed  $object   Value for this operation.
-     * @param string $key      Key to set Value on.
-     *
-     * @throws ParseException
+     * @param mixed $oldValue Value prior to this operation.
+     * @param mixed $object Value for this operation.
+     * @param string $key Key to set Value on.
      *
      * @return int New value after application.
+     * @throws ParseException
+     *
      */
     public function _apply($oldValue, $object, $key)
     {
@@ -78,9 +68,9 @@ class IncrementOperation implements FieldOperation
      *
      * @param FieldOperation $previous Previous Operation.
      *
+     * @return FieldOperation
      * @throws ParseException
      *
-     * @return FieldOperation
      */
     public function _mergeWithPrevious($previous)
     {
@@ -101,5 +91,15 @@ class IncrementOperation implements FieldOperation
         throw new ParseException(
             'Operation is invalid after previous operation.'
         );
+    }
+
+    /**
+     * Get the value for this operation.
+     *
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 }

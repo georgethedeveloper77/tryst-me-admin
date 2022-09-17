@@ -16,9 +16,9 @@ interface FieldOperation extends Encodable
     /**
      * Applies the current operation and returns the result.
      *
-     * @param mixed  $oldValue Value prior to this operation.
-     * @param mixed  $object   Value for this operation.
-     * @param string $key      Key to perform this operation on.
+     * @param mixed $oldValue Value prior to this operation.
+     * @param mixed $object Value for this operation.
+     * @param string $key Key to perform this operation on.
      *
      * @return mixed Result of the operation.
      */

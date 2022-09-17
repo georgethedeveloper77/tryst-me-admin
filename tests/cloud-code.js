@@ -1,10 +1,10 @@
 /* global Parse */
 Parse.Cloud.define('bar', (request) => {
     if (request.params.key2 === 'value1') {
-    return 'Foo';
-  } else {
-    throw 'bad stuff happened';
-  }
+        return 'Foo';
+    } else {
+        throw 'bad stuff happened';
+    }
 });
 
 Parse.Cloud.define('foo', (request) => {
@@ -26,7 +26,7 @@ Parse.Cloud.define('foo', (request) => {
                     x: 3
                 }
             },
-            array:[
+            array: [
                 {
                     __type: 'Object',
                     className: 'Bar',
@@ -37,28 +37,28 @@ Parse.Cloud.define('foo', (request) => {
         };
         return result;
     } else if (key1 === 'value1') {
-        return { a: 2 };
+        return {a: 2};
     } else {
         throw 'invalid!';
     }
 });
 
 Parse.Cloud.job('CloudJob1', () => {
-  return {
-    status: 'cloud job completed'
-  };
+    return {
+        status: 'cloud job completed'
+    };
 });
 
 Parse.Cloud.job('CloudJob2', () => {
-  return new Promise((resolve) => {
-    setTimeout(function() {
-      resolve({
-        status: 'cloud job completed'
-      })
-    }, 3000);
-  });
+    return new Promise((resolve) => {
+        setTimeout(function () {
+            resolve({
+                status: 'cloud job completed'
+            })
+        }, 3000);
+    });
 });
 
 Parse.Cloud.job('CloudJobFailing', () => {
-  throw 'cloud job failed';
+    throw 'cloud job failed';
 });

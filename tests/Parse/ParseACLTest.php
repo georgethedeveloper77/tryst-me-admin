@@ -9,23 +9,22 @@ use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseRole;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseACLTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('_User');
         Helper::clearClass('Object');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
     }
@@ -464,7 +463,7 @@ class ParseACLTest extends TestCase
         );
 
         ParseACL::_createACLFromJSON([
-            1234    => 'write'
+            1234 => 'write'
         ]);
     }
 
@@ -479,7 +478,7 @@ class ParseACLTest extends TestCase
         );
 
         ParseACL::_createACLFromJSON([
-            'id'    => [
+            'id' => [
                 'not-valid' => true
             ]
         ]);
@@ -496,7 +495,7 @@ class ParseACLTest extends TestCase
         );
 
         ParseACL::_createACLFromJSON([
-            'id'    => [
+            'id' => [
                 'write' => 'not-valid'
             ]
         ]);
@@ -522,7 +521,7 @@ class ParseACLTest extends TestCase
         // verify the second id was not actually added internally
         $permissions = $acl->_encode();
         $this->assertEquals([
-            'userid'    => [
+            'userid' => [
                 'read' => true
             ]
         ], $permissions);

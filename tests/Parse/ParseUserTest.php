@@ -6,27 +6,26 @@ use Parse\ParseClient;
 use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseUserTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
         Helper::clearClass(ParseUser::$parseClassName);
     }
 
-    public function tearDown() : void
+    public static function tearDownAfterClass(): void
+    {
+        ParseUser::_unregisterSubclass();
+    }
+
+    public function tearDown(): void
     {
         Helper::tearDown();
         ParseUser::logOut();
         Helper::clearClass(ParseUser::$parseClassName);
-    }
-
-    public static function tearDownAfterClass() : void
-    {
-        ParseUser::_unregisterSubclass();
     }
 
     public function testUserAttributes()
@@ -39,15 +38,6 @@ class ParseUserTest extends TestCase
         $this->assertEquals('asds@mail.com', $user->getEmail());
     }
 
-    public function testUserSignUp()
-    {
-        $user = new ParseUser();
-        $user->setUsername('asdf');
-        $user->setPassword('zxcv');
-        $user->signUp();
-        $this->assertTrue($user->isAuthenticated());
-    }
-
     public function testLoginSuccess()
     {
         $this->testUserSignUp();
@@ -56,6 +46,15 @@ class ParseUserTest extends TestCase
         $this->assertEquals('asdf', $user->get('username'));
 
         ParseUser::logOut();
+    }
+
+    public function testUserSignUp()
+    {
+        $user = new ParseUser();
+        $user->setUsername('asdf');
+        $user->setPassword('zxcv');
+        $user->signUp();
+        $this->assertTrue($user->isAuthenticated());
     }
 
     public function testLoginEmptyUsername()
@@ -511,9 +510,9 @@ class ParseUserTest extends TestCase
         $userList = [];
         for ($i = 0; $i < 4; $i++) {
             $user = new ParseUser();
-            $user->setUsername('user_num_'.$i);
+            $user->setUsername('user_num_' . $i);
             $user->setPassword('password');
-            $user->set('email', 'asdf_'.$i.'@example.com');
+            $user->set('email', 'asdf_' . $i . '@example.com');
             $user->signUp();
             $userList[] = $user;
         }
@@ -682,9 +681,9 @@ class ParseUserTest extends TestCase
         $this->assertNull(ParseUser::getCurrentUser());
 
         $storage->set('user', [
-            'id'            => $id,
+            'id' => $id,
             '_sessionToken' => $sessionToken,
-            'moredata'      => 'moredata'
+            'moredata' => 'moredata'
         ]);
 
         $currentUser = ParseUser::getCurrentUser();
@@ -763,6 +762,6 @@ class ParseUserTest extends TestCase
         $user->setUsername('Mary');
         $user->save();
         $response = ParseClient::_request('GET', 'users', null, null, true);
-        $this->assertArrayNotHasKey('authData', $response['results'][0])    ;
+        $this->assertArrayNotHasKey('authData', $response['results'][0]);
     }
 }

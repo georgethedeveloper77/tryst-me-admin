@@ -5,17 +5,16 @@ namespace Parse\Test;
 use Parse\ParseInstallation;
 use Parse\ParsePush;
 use Parse\ParsePushStatus;
-
 use PHPUnit\Framework\TestCase;
 
 class ParsePushTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
     }
@@ -27,7 +26,7 @@ class ParsePushTest extends TestCase
         ParsePush::send(
             [
                 'channels' => [''],
-                'data'     => ['alert' => 'sample message'],
+                'data' => ['alert' => 'sample message'],
             ]
         );
     }
@@ -36,8 +35,8 @@ class ParsePushTest extends TestCase
     {
         $response = ParsePush::send(
             [
-            'channels' => [''],
-            'data'     => ['alert' => 'sample message'],
+                'channels' => [''],
+                'data' => ['alert' => 'sample message'],
             ],
             true
         );
@@ -55,7 +54,7 @@ class ParsePushTest extends TestCase
         );
 
         ParsePush::send([
-            'data'  => [
+            'data' => [
                 'alert' => 'are we missing something?'
             ]
         ], true);
@@ -75,14 +74,14 @@ class ParsePushTest extends TestCase
         $query->equalTo('key', 'value');
 
         ParsePush::send([
-            'data'      => [
-                'alert'     => 'too many limits'
+            'data' => [
+                'alert' => 'too many limits'
             ],
-            'channels'  => [
+            'channels' => [
                 'PushFans',
                 'PHPFans'
             ],
-            'where'     => $query
+            'where' => $query
         ], true);
     }
 
@@ -92,8 +91,8 @@ class ParsePushTest extends TestCase
         $query->equalTo('key', 'value');
         $response = ParsePush::send(
             [
-            'data'  => ['alert' => 'iPhone 5 is out!'],
-            'where' => $query,
+                'data' => ['alert' => 'iPhone 5 is out!'],
+                'where' => $query,
             ],
             true
         );
@@ -105,7 +104,7 @@ class ParsePushTest extends TestCase
         $query = ParseInstallation::query();
         $response = ParsePush::send(
             [
-                'data'  => ['alert' => 'Done without conditions!'],
+                'data' => ['alert' => 'Done without conditions!'],
                 'where' => $query,
             ],
             true
@@ -121,7 +120,7 @@ class ParsePushTest extends TestCase
         );
         ParsePush::send(
             [
-                'data'  => ['alert' => 'Will this really work?'],
+                'data' => ['alert' => 'Will this really work?'],
                 'where' => 'not-a-query',
             ],
             true
@@ -132,10 +131,10 @@ class ParsePushTest extends TestCase
     {
         $response = ParsePush::send(
             [
-                'data'            => ['alert' => 'iPhone 5 is out!'],
-                'push_time'       => new \DateTime(),
+                'data' => ['alert' => 'iPhone 5 is out!'],
+                'push_time' => new \DateTime(),
                 'expiration_time' => new \DateTime(),
-                'channels'        => [],
+                'channels' => [],
             ],
             true
         );
@@ -150,11 +149,11 @@ class ParsePushTest extends TestCase
         );
         ParsePush::send(
             [
-                'data'            => ['alert' => 'iPhone 5 is out!'],
-                'push_time'       => new \DateTime(),
+                'data' => ['alert' => 'iPhone 5 is out!'],
+                'push_time' => new \DateTime(),
                 'expiration_time' => new \DateTime(),
-                'expiration_interval'   => 90,
-                'channels'        => [],
+                'expiration_interval' => 90,
+                'channels' => [],
             ],
             true
         );
@@ -168,7 +167,7 @@ class ParsePushTest extends TestCase
         $response = ParsePush::send(
             [
                 'channels' => [''],
-                'data'     => ['alert' => 'sample message'],
+                'data' => ['alert' => 'sample message'],
             ],
             true
         );
@@ -189,7 +188,7 @@ class ParsePushTest extends TestCase
         $response = ParsePush::send(
             [
                 'channels' => [''],
-                'data'     => $payload,
+                'data' => $payload,
             ],
             true
         );
@@ -215,8 +214,8 @@ class ParsePushTest extends TestCase
         $options = $query->_getOptions();
         $this->assertEquals([
             'where' => [
-                'channels'  => [
-                    '$in'       => [
+                'channels' => [
+                    '$in' => [
                         ''
                     ]
                 ]
@@ -247,7 +246,7 @@ class ParsePushTest extends TestCase
         // both are acceptable
         $this->assertTrue(
             $pushStatus->isRunning() || $pushStatus->hasFailed() || $pushStatus->hasSucceeded(),
-            'Push was not running/succeeded/failed, was '.$pushStatus->getPushStatus()
+            'Push was not running/succeeded/failed, was ' . $pushStatus->getPushStatus()
         );
 
         // verify # sent & failed
@@ -297,13 +296,13 @@ class ParsePushTest extends TestCase
 
         // test no push id
         $this->assertNull(ParsePush::getStatus([
-            '_headers'  => []
+            '_headers' => []
         ]));
 
         // test bad push status id
         $this->assertNull(ParsePush::getStatus([
-            '_headers'  => [
-                'X-Parse-Push-Status-Id'    => 'not-a-real-id'
+            '_headers' => [
+                'X-Parse-Push-Status-Id' => 'not-a-real-id'
             ]
         ]));
     }

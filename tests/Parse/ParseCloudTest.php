@@ -6,17 +6,16 @@ use Parse\ParseCloud;
 use Parse\ParseGeoPoint;
 use Parse\ParseObject;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseCloudTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         $user = ParseUser::getCurrentUser();
         if (isset($user)) {
@@ -31,8 +30,8 @@ class ParseCloudTest extends TestCase
     public function testFunctionCall()
     {
         $response = ParseCloud::run('bar', [
-            'key1'  => 'value2',
-            'key2'  => 'value1'
+            'key1' => 'value2',
+            'key2' => 'value1'
         ]);
 
         $this->assertEquals('Foo', $response);
@@ -46,8 +45,8 @@ class ParseCloudTest extends TestCase
         $user->signUp();
 
         $response = ParseCloud::run('bar', [
-            'key1'  => 'value2',
-            'key2'  => 'value1'
+            'key1' => 'value2',
+            'key2' => 'value1'
         ]);
 
         $this->assertEquals('Foo', $response);
@@ -67,8 +66,8 @@ class ParseCloudTest extends TestCase
         );
 
         ParseCloud::run('bar', [
-            'key1'  => 'value1',
-            'key2'  => 'value2'
+            'key1' => 'value1',
+            'key2' => 'value2'
         ]);
     }
 

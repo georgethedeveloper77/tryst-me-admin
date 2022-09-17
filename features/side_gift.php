@@ -1,6 +1,7 @@
 <?php
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
 use Parse\ParseException;
@@ -11,10 +12,10 @@ use Parse\ParseUser;
 //session_start();
 
 $currUser = ParseUser::getCurrentUser();
-if ($currUser){
+if ($currUser) {
 
     // Store current user session token, to restore in case we create new user
-    $_SESSION['token'] = $currUser -> getSessionToken();
+    $_SESSION['token'] = $currUser->getSessionToken();
 } else {
 
     header("Refresh:0; url=../index.php");
@@ -26,7 +27,7 @@ if ($currUser){
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Gifts</h3> </div>
+            <h3 class="text-primary">Gifts</h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Features</a></li>
@@ -43,14 +44,14 @@ if ($currUser){
         </div>
         <div class="row">
             <div class="col-lg">
-               <div class="card">
+                <div class="card">
 
                     <?php
 
                     $query = new ParseQuery("Gifts");
                     $matchCounter = $query->count(true);
 
-                    echo ' <h2 class="card-title">'.$matchCounter.' Gift(s) in total</h2> ';
+                    echo ' <h2 class="card-title">' . $matchCounter . ' Gift(s) in total</h2> ';
 
                     ?>
 
@@ -58,7 +59,8 @@ if ($currUser){
                     <div class="card-body">
                         <div class="table-responsive">
                             <!--<table class="table">-->
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                                   cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
                                     <th>ObjectId</th>
@@ -83,20 +85,20 @@ if ($currUser){
                                         $cObj = $iValue;
 
                                         $objectId = $cObj->getObjectId();
-                                        $date= $cObj->getCreatedAt();
-                                        $created = date_format($date,"d/m/Y");
+                                        $date = $cObj->getCreatedAt();
+                                        $created = date_format($date, "d/m/Y");
 
                                         $credits = $cObj->get('coins');
                                         $category = $cObj->get('categories');
 
                                         $typeFile = $cObj->get('file');
-                                        if ($typeFile !== null){
+                                        if ($typeFile !== null) {
 
                                             $profilePhotoUrl = $typeFile->getURL();
 
                                             $file = "<span/><a target='_blank' href=\"$profilePhotoUrl\" class=\"badge badge-info\">Download</a></span>";
 
-                                        } else{
+                                        } else {
 
                                             $file = "<span class=\"badge badge-red\">NOT AVAILABLE</span>";
                                         }
@@ -106,25 +108,26 @@ if ($currUser){
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td>'.$created.'</td>
-                                    <td><span>'.$giftName.'</span></td>
-                                    <td>'.$credits.'</td>
-                                     <td>'.$category.'</td>
-                                    <td><span>'.$file.'</span></td>
+                                    <td>' . $objectId . '</td>
+                                    <td>' . $created . '</td>
+                                    <td><span>' . $giftName . '</span></td>
+                                    <td>' . $credits . '</td>
+                                     <td>' . $category . '</td>
+                                    <td><span>' . $file . '</span></td>
                                 </tr>
                                 
                                 ';
                                     }
                                     // error in query
-                                } catch (ParseException $e){ echo $e->getMessage(); }
+                                } catch (ParseException $e) {
+                                    echo $e->getMessage();
+                                }
                                 ?>
 
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
 
 
                 </div>

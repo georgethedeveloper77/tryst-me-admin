@@ -1,6 +1,7 @@
-(function(jsGrid, $, undefined) {
+(function (jsGrid, $, undefined) {
 
-    function Field(config) {
+    function Field(config)
+    {
         $.extend(true, this, config);
         this.sortingFunc = this._getSortingFunc();
     }
@@ -19,47 +20,47 @@
         sorting: true,
         sorter: "string", // name of SortStrategy or function to compare elements
 
-        headerTemplate: function() {
+        headerTemplate: function () {
             return (this.title === undefined || this.title === null) ? this.name : this.title;
         },
 
-        itemTemplate: function(value, item) {
+        itemTemplate: function (value, item) {
             return value;
         },
 
-        filterTemplate: function() {
+        filterTemplate: function () {
             return "";
         },
 
-        insertTemplate: function() {
+        insertTemplate: function () {
             return "";
         },
 
-        editTemplate: function(value, item) {
+        editTemplate: function (value, item) {
             this._value = value;
             return this.itemTemplate(value, item);
         },
 
-        filterValue: function() {
+        filterValue: function () {
             return "";
         },
 
-        insertValue: function() {
+        insertValue: function () {
             return "";
         },
 
-        editValue: function() {
+        editValue: function () {
             return this._value;
         },
 
-        _getSortingFunc: function() {
+        _getSortingFunc: function () {
             var sorter = this.sorter;
 
-            if($.isFunction(sorter)) {
+            if ($.isFunction(sorter)) {
                 return sorter;
             }
 
-            if(typeof sorter === "string") {
+            if (typeof sorter === "string") {
                 return jsGrid.sortStrategies[sorter];
             }
 

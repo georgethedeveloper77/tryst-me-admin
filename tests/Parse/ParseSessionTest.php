@@ -5,30 +5,29 @@ namespace Parse\Test;
 use Parse\ParseClient;
 use Parse\ParseSession;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseSessionTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
         Helper::clearClass(ParseUser::$parseClassName);
         Helper::clearClass(ParseSession::$parseClassName);
     }
 
-    public function tearDown() : void
+    public static function tearDownAfterClass(): void
+    {
+        ParseUser::_unregisterSubclass();
+        ParseSession::_unregisterSubclass();
+    }
+
+    public function tearDown(): void
     {
         Helper::tearDown();
         ParseUser::logOut();
         Helper::clearClass(ParseUser::$parseClassName);
         Helper::clearClass(ParseSession::$parseClassName);
-    }
-
-    public static function tearDownAfterClass() : void
-    {
-        ParseUser::_unregisterSubclass();
-        ParseSession::_unregisterSubclass();
     }
 
     public function testRevocableSession()

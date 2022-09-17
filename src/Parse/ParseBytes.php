@@ -38,6 +38,16 @@ class ParseBytes implements Encodable
     }
 
     /**
+     * Sets a new byte array
+     *
+     * @param array $byteArray Byte array to set
+     */
+    private function setByteArray(array $byteArray)
+    {
+        $this->byteArray = $byteArray;
+    }
+
+    /**
      * Create a ParseBytes object with a given base 64 encoded data string.
      *
      * @param string $base64Data
@@ -61,16 +71,6 @@ class ParseBytes implements Encodable
     {
         $byteArray = unpack('C*', base64_decode($base64Data));
         $this->setByteArray($byteArray);
-    }
-
-    /**
-     * Sets a new byte array
-     *
-     * @param array $byteArray  Byte array to set
-     */
-    private function setByteArray(array $byteArray)
-    {
-        $this->byteArray = $byteArray;
     }
 
     /**

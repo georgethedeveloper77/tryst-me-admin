@@ -52,9 +52,9 @@ class ParseApp
     /**
      * To fetch the keys and settings for all of the apps that you are a collaborator on.
      *
+     * @return array Containing the keys and settings for your apps.
      * @throws ParseException
      * @deprecated Not available on the open source parse-server.
-     * @return array Containing the keys and settings for your apps.
      */
     public static function fetchApps()
     {
@@ -75,15 +75,15 @@ class ParseApp
      *
      * @param string $application_id
      *
+     * @return array Containing the keys and settings for your app.
      * @throws ParseException
      * @deprecated Not available on the open source parse-server.
-     * @return array Containing the keys and settings for your app.
      */
     public static function fetchApp($application_id)
     {
         $result = ParseClient::_request(
             'GET',
-            'apps/'.$application_id,
+            'apps/' . $application_id,
             null,
             null,
             true,
@@ -98,9 +98,9 @@ class ParseApp
      *
      * @param array $data
      *
+     * @return array
      * @throws ParseException
      * @deprecated Not available on the open source parse-server.
-     * @return array
      */
     public static function createApp(array $data)
     {
@@ -120,17 +120,17 @@ class ParseApp
      * You can change your app's name, as well as change your app's settings.
      *
      * @param string $application_id
-     * @param array  $data
+     * @param array $data
      *
+     * @return array
      * @throws ParseException
      * @deprecated Not available on the open source parse-server.
-     * @return array
      */
     public static function updateApp($application_id, array $data)
     {
         $result = ParseClient::_request(
             'PUT',
-            'apps/'.$application_id,
+            'apps/' . $application_id,
             null,
             json_encode($data),
             true,

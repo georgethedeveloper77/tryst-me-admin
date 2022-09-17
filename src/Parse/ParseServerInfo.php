@@ -28,6 +28,16 @@ class ParseServerInfo
     private static $serverVersion;
 
     /**
+     * Gets features for the current server
+     *
+     * @return array
+     */
+    public static function getFeatures()
+    {
+        return self::getServerInfo()['features'];
+    }
+
+    /**
      * Requests, sets and returns server features and version
      *
      * @return array
@@ -59,8 +69,8 @@ class ParseServerInfo
         }
 
         return [
-            'features'  => self::$serverFeatures,
-            'version'   => self::$serverVersion
+            'features' => self::$serverFeatures,
+            'version' => self::$serverVersion
         ];
     }
 
@@ -69,32 +79,11 @@ class ParseServerInfo
      * Allows setting the server version to avoid making an additional request
      * if the version is obtained elsewhere.
      *
-     * @param string $version   Version to set
+     * @param string $version Version to set
      */
     public static function _setServerVersion($version)
     {
         self::$serverVersion = $version;
-    }
-
-    /**
-     * Get a specific feature set from the server
-     *
-     * @param string $key   Feature set to get
-     * @return mixed
-     */
-    public static function get($key)
-    {
-        return self::getServerInfo()['features'][$key];
-    }
-
-    /**
-     * Gets features for the current server
-     *
-     * @return array
-     */
-    public static function getFeatures()
-    {
-        return self::getServerInfo()['features'];
     }
 
     /**
@@ -119,6 +108,17 @@ class ParseServerInfo
     public static function getGlobalConfigFeatures()
     {
         return self::get('globalConfig');
+    }
+
+    /**
+     * Get a specific feature set from the server
+     *
+     * @param string $key Feature set to get
+     * @return mixed
+     */
+    public static function get($key)
+    {
+        return self::getServerInfo()['features'][$key];
     }
 
     /**

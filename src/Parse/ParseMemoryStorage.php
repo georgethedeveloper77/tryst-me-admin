@@ -24,8 +24,8 @@ class ParseMemoryStorage implements ParseStorageInterface
     /**
      * Sets a key-value pair in storage.
      *
-     * @param string $key   The key to set
-     * @param mixed  $value The value to set
+     * @param string $key The key to set
+     * @param mixed $value The value to set
      *
      * @return void
      */

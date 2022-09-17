@@ -5,24 +5,34 @@ namespace Parse\Test;
 use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseQueryAggregateTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('TestObject');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
+    }
+
+    public function testDistinctQuery()
+    {
+        $this->loadObjects();
+        $query = new ParseQuery('TestObject');
+        $results = $query->distinct('score');
+
+        $this->assertEquals(2, count($results));
+        $this->assertEquals(in_array(10, $results), true);
+        $this->assertEquals(in_array(20, $results), true);
     }
 
     /**
@@ -47,17 +57,6 @@ class ParseQueryAggregateTest extends TestCase
 
         $objects = [$obj1, $obj2, $obj3, $obj4];
         ParseObject::saveAll($objects);
-    }
-
-    public function testDistinctQuery()
-    {
-        $this->loadObjects();
-        $query = new ParseQuery('TestObject');
-        $results = $query->distinct('score');
-
-        $this->assertEquals(2, count($results));
-        $this->assertEquals(in_array(10, $results), true);
-        $this->assertEquals(in_array(20, $results), true);
     }
 
     public function testDistinctWhereQuery()
@@ -164,7 +163,7 @@ class ParseQueryAggregateTest extends TestCase
     {
         $pipeline = [
             'match' => [
-                'score' => [ '$gt' => 15 ]
+                'score' => ['$gt' => 15]
             ]
         ];
         $this->loadObjects();
@@ -263,7 +262,7 @@ class ParseQueryAggregateTest extends TestCase
 
         $pipeline = [
             'match' => [
-                'score' => [ '$gt' => 15 ]
+                'score' => ['$gt' => 15]
             ]
         ];
 

@@ -40,16 +40,6 @@ class AddUniqueOperation implements FieldOperation
     }
 
     /**
-     * Returns the values for this operation.
-     *
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->objects;
-    }
-
-    /**
      * Returns an associative array encoding of this operation.
      *
      * @return array
@@ -57,7 +47,7 @@ class AddUniqueOperation implements FieldOperation
     public function _encode()
     {
         return ['__op' => 'AddUnique',
-            'objects'  => ParseClient::_encode($this->objects, true), ];
+            'objects' => ParseClient::_encode($this->objects, true),];
     }
 
     /**
@@ -65,9 +55,9 @@ class AddUniqueOperation implements FieldOperation
      *
      * @param FieldOperation $previous Previous Operation.
      *
+     * @return FieldOperation Merged Operation.
      * @throws ParseException
      *
-     * @return FieldOperation Merged Operation.
      */
     public function _mergeWithPrevious($previous)
     {
@@ -95,11 +85,21 @@ class AddUniqueOperation implements FieldOperation
     }
 
     /**
+     * Returns the values for this operation.
+     *
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->objects;
+    }
+
+    /**
      * Apply the current operation and return the result.
      *
-     * @param mixed  $oldValue Value prior to this operation.
-     * @param array  $obj      Value being applied.
-     * @param string $key      Key this operation affects.
+     * @param mixed $oldValue Value prior to this operation.
+     * @param array $obj Value being applied.
+     * @param string $key Key this operation affects.
      *
      * @return array
      */
@@ -109,7 +109,7 @@ class AddUniqueOperation implements FieldOperation
             return $this->objects;
         }
         if (!is_array($oldValue)) {
-            $oldValue = (array) $oldValue;
+            $oldValue = (array)$oldValue;
         }
         foreach ($this->objects as $object) {
             if ($object instanceof ParseObject && $object->getObjectId()) {
@@ -133,8 +133,8 @@ class AddUniqueOperation implements FieldOperation
     /**
      * Checks if a parse object is contained in a given array of values
      *
-     * @param ParseObject $parseObject  ParseObject to check for existence of
-     * @param array $oldValue           Array to check if ParseObject is present in
+     * @param ParseObject $parseObject ParseObject to check for existence of
+     * @param array $oldValue Array to check if ParseObject is present in
      * @return bool
      */
     private function isParseObjectInArray($parseObject, $oldValue)

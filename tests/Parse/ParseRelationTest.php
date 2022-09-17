@@ -4,35 +4,18 @@ namespace Parse\Test;
 
 use Parse\ParseObject;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseRelationTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
-    }
-
-    /**
-     * This function used as a helper function in test functions to save objects.
-     *
-     * @param int      $numberOfObjects Number of objects you want to save.
-     * @param callable $callback        Function which takes int as a parameter.
-     *                                  and should return ParseObject.
-     */
-    public function saveObjects($numberOfObjects, $callback)
-    {
-        $allObjects = [];
-        for ($i = 0; $i < $numberOfObjects; $i++) {
-            $allObjects[] = $callback($i);
-        }
-        ParseObject::saveAll($allObjects);
     }
 
     public function testParseRelations()
@@ -102,6 +85,22 @@ class ParseRelationTest extends TestCase
         $results = $query->find();
         $this->assertEquals(1, count($results));
         $this->assertEquals($children[4]->getObjectId(), $results[0]->getObjectId());
+    }
+
+    /**
+     * This function used as a helper function in test functions to save objects.
+     *
+     * @param int $numberOfObjects Number of objects you want to save.
+     * @param callable $callback Function which takes int as a parameter.
+     *                                  and should return ParseObject.
+     */
+    public function saveObjects($numberOfObjects, $callback)
+    {
+        $allObjects = [];
+        for ($i = 0; $i < $numberOfObjects; $i++) {
+            $allObjects[] = $callback($i);
+        }
+        ParseObject::saveAll($allObjects);
     }
 
     public function testQueriesOnRelationFields()

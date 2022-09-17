@@ -8,8 +8,10 @@
  *
  * @author Júlio César Gonçalves de Oliveira <julio@pinguineras.com.br>
  */
+
 namespace Parse\Test;
 
+use Exception;
 use Parse\HttpClients\ParseCurlHttpClient;
 use Parse\HttpClients\ParseStreamHttpClient;
 use Parse\ParseClient;
@@ -18,7 +20,6 @@ use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseSchema;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseSchemaTest extends TestCase
@@ -33,19 +34,19 @@ class ParseSchemaTest extends TestCase
      */
     private static $badClassName = "<Bad~ Class~ Name>";
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         self::$schema = new ParseSchema('SchemaTest');
         Helper::clearClass('_User');
         Helper::setHttpClient();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
         self::$schema->delete();
@@ -262,7 +263,7 @@ class ParseSchemaTest extends TestCase
         try {
             $schema = new ParseSchema('NotARealSchema');
             $schema->purge();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // exception on earlier versions > 2.8, no exception on >= 2.8
             // thus hard to test for this unless version detection is utilized here
         }
@@ -481,7 +482,7 @@ class ParseSchemaTest extends TestCase
     {
         $schema = self::$schema;
         $schema->addString('name');
-        $index = [ 'name' => 1 ];
+        $index = ['name' => 1];
         $schema->addIndex('test_index', $index);
         $schema->save();
 
@@ -495,7 +496,7 @@ class ParseSchemaTest extends TestCase
         $schema = self::$schema;
         $schema->save();
         $schema->addString('name');
-        $index = [ 'name' => 1 ];
+        $index = ['name' => 1];
         $schema->addIndex('test_index', $index);
         $schema->update();
 
@@ -509,7 +510,7 @@ class ParseSchemaTest extends TestCase
         $schema = self::$schema;
         $schema->save();
         $schema->addString('name');
-        $index = [ 'name' => 1 ];
+        $index = ['name' => 1];
         $schema->addIndex('test_index', $index);
         $schema->update();
 

@@ -14,19 +14,19 @@ class Helper
      * Application Id
      * @var string
      */
-    public static $appId      = 'app-id-here';
+    public static $appId = 'app-id-here';
 
     /**
      * Rest API Key
      * @var string
      */
-    public static $restKey    = 'rest-api-key-here';
+    public static $restKey = 'rest-api-key-here';
 
     /**
      * Master Key
      * @var string
      */
-    public static $masterKey  = 'master-key-here';
+    public static $masterKey = 'master-key-here';
 
     /**
      * Account Key (for parse.com)
@@ -50,6 +50,11 @@ class Helper
         );
         self::setServerURL();
         self::setHttpClient();
+    }
+
+    public static function setServerURL()
+    {
+        ParseClient::setServerURL('http://localhost:1337', 'parse');
     }
 
     public static function setHttpClient()
@@ -77,11 +82,6 @@ class Helper
                 ParseClient::setHttpClient(new ParseStreamHttpClient());
             }
         }
-    }
-
-    public static function setServerURL()
-    {
-        ParseClient::setServerURL('http://localhost:1337', 'parse');
     }
 
     public static function tearDown()

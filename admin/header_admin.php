@@ -7,6 +7,7 @@
  */
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
 use Parse\ParseUser;
@@ -61,7 +62,7 @@ echo '
                 <!-- Profile -->
                 
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="' .$avatarURL.'" alt="user" class="profile-pic" /></a>
+                <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="' . $avatarURL . '" alt="user" class="profile-pic" /></a>
                  
                     <div class="dropdown-menu dropdown-menu-right animated zoomIn">
                         <ul class="dropdown-user">

@@ -4,17 +4,16 @@ namespace Parse\Test;
 
 use Parse\ParseObject;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class IncrementTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::clearClass('TestObject');
         Helper::tearDown();
@@ -245,7 +244,7 @@ class IncrementTest extends TestCase
         $obj->save();
         $this->expectException(
             'Parse\ParseException',
-            'schema mismatch for TestObject.randomkeyagain; '.
+            'schema mismatch for TestObject.randomkeyagain; ' .
             'expected Number but got String'
         );
         $objAgain->save();

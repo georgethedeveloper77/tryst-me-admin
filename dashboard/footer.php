@@ -37,8 +37,8 @@ echo '
 
     <link href="../assets/dashboard/css/lib/calendar2/semantic.ui.min.css" rel="stylesheet">
     <link href="../assets/dashboard/css/lib/calendar2/pignose.calendar.min.css" rel="stylesheet">
-    <link href="../assets/dashboard/css/lib/owl.carousel.min.css" rel="stylesheet" />
-    <link href="../assets/dashboard/css/lib/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="../assets/dashboard/css/lib/owl.carousel.min.css" rel="stylesheet"/>
+    <link href="../assets/dashboard/css/lib/owl.theme.default.min.css" rel="stylesheet"/>
     <link href="../assets/dashboard/css/helper.css" rel="stylesheet">
     <link href="../assets/dashboard/css/style.css" rel="stylesheet">
     <link href="../assets/dashboard/css/aliki.css" rel="stylesheet">
@@ -57,7 +57,7 @@ echo '
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <!-- Lightbox -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/js/lightbox.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/css/lightbox.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/css/lightbox.min.css" rel="stylesheet"/>
 
 <!-- All Jquery -->
 <script src="../assets/dashboard/js/lib/jquery/jquery.min.js"></script>
@@ -134,9 +134,9 @@ echo '
         $('#loadingModal').modal('show');
 
         $.ajax({
-            url:"../auth/logout.php",
+            url: "../auth/logout.php",
 
-            success:function(data) {
+            success: function (data) {
                 var results = data;
                 console.debug(results);
 
@@ -155,9 +155,9 @@ echo '
         $('#loadingModal').modal('show');
 
         $.ajax({
-            url:"../auth/logout.php",
+            url: "../auth/logout.php",
 
-            success:function(data) {
+            success: function (data) {
                 var results = data;
                 console.debug(results);
 
@@ -185,7 +185,7 @@ echo '
         $('#loadingModal').modal('show');
 
 
-        setTimeout(function(){
+        setTimeout(function () {
             location.reload();
         }, 1000);
     }
@@ -197,13 +197,13 @@ echo '
         $('#loadingModal').modal('show');
 
 
-        setTimeout(function(){
+        setTimeout(function () {
             location.reload();
         }, 3000);
     }
 
     function showToastTest() {
-        toastr.success('This Is Success Message','Bottom Left',{
+        toastr.success('This Is Success Message', 'Bottom Left', {
             "positionClass": "toast-bottom-left",
             timeOut: 5000,
             "closeButton": true,
@@ -233,8 +233,8 @@ $version = ParseServerInfo::getVersion();
 echo '
 
 <div class="footerFixed">
-    <p> © 2022 All rights reserved. Developed with <i class="fa fa-heart"></i> by <a href="https://www.angopapo.com" target="_blank">Angopapo, Lda</a></p>
-    <p> Parse Server v.'.$version.' / Admin Panel v.1.1</p>
+    <p> © 2022 All rights reserved. Developed by <a href="https://www.mindberzerk.tech" target="_blank">MindBerzerk Inc</a></p>
+    <p> Parse Server v.' . $version . ' / Admin Panel v.1.1</p>
 </div>
  
  ';

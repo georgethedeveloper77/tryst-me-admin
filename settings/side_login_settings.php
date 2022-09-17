@@ -3,13 +3,11 @@
 require '../vendor/autoload.php';
 
 use Parse\ParseConfig;
-use Parse\ParseQuery;
 use Parse\ParseException;
 
 // Update data ------------------------------------------------
 
-if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['approveAction'])){
-
+if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['approveAction'])) {
     $phone = $_POST['phone'];
     $facebook = $_POST['facebook'];
     $google = $_POST['google'];
@@ -54,7 +52,7 @@ $appleLoginIos = $config->get('appleLoginEnabledForIOS');
 
 $withdrawPercent = $config->get('withdraw_percent');
 
-if ($phoneLogin ==! null){
+if ($phoneLogin == !null) {
     $phoneLogin1 = "Enabled";
     $phoneLoginDisabled1 = true;
 
@@ -68,7 +66,7 @@ if ($phoneLogin ==! null){
     $phoneLoginDisabled2 = true;
 }
 
-if ($facebookLogin ==! null){
+if ($facebookLogin == !null) {
     $facebookLogin1 = "Enabled";
     $facebookLoginDisabled1 = true;
 
@@ -82,7 +80,7 @@ if ($facebookLogin ==! null){
     $facebookLoginDisabled2 = true;
 }
 
-if ($googleLogin ==! null){
+if ($googleLogin == !null) {
     $googleLogin1 = "Enabled";
     $googleLoginDisabled1 = true;
 
@@ -96,7 +94,7 @@ if ($googleLogin ==! null){
     $googleLoginDisabled2 = true;
 }
 
-if ($appleLogin ==! null){
+if ($appleLogin == !null) {
     $appleLogin1 = "Enabled";
     $appleLoginDisabled1 = true;
 
@@ -110,7 +108,7 @@ if ($appleLogin ==! null){
     $appleLoginDisabled2 = true;
 }
 
-if ($appleLoginIos ==! null){
+if ($appleLoginIos == !null) {
     $appleLoginIos1 = "Enabled";
     $appleLoginIosDisabled1 = true;
 
@@ -126,22 +124,22 @@ if ($appleLoginIos ==! null){
 
 ?>
 
-<div class="page-wrapper">
-    <!-- Bread crumb -->
-    <div class="row page-titles">
-        <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Login Settings </h3> </div>
-        <div class="col-md-7 align-self-center">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
-                <li class="breadcrumb-item active">Login Settings</li>
-            </ol>
+    <div class="page-wrapper">
+        <!-- Bread crumb -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h3 class="text-primary">Login Settings </h3></div>
+            <div class="col-md-7 align-self-center">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Settings</a></li>
+                    <li class="breadcrumb-item active">Login Settings</li>
+                </ol>
+            </div>
         </div>
-    </div>
 
-    <?php
+        <?php
 
-    echo '
+        echo '
     
     <!-- Container fluid  -->
     <div class="container-fluid">
@@ -225,10 +223,10 @@ if ($appleLoginIos ==! null){
     <!-- End Container fluid  -->
     
     ';
-    ?>
+        ?>
 
 
-</div>
+    </div>
 
 <?php
 
@@ -237,9 +235,10 @@ function showSweetAlert($title, $explain, $type, $redirectUrl)
     echo '<script type="text/javascript">
     setTimeout(function () 
         { 
-            swal("'.$title.'","'.$explain.'","'.$type.'").then(value => window.location = "'.$redirectUrl.'");
+            swal("' . $title . '","' . $explain . '","' . $type . '").then(value => window.location = "' . $redirectUrl . '");
         }, 
         1000);
         </script>';
 }
+
 ?>

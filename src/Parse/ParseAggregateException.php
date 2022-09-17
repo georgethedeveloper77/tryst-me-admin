@@ -23,8 +23,8 @@ class ParseAggregateException extends ParseException
     /**
      * Constructs a Parse\ParseAggregateException.
      *
-     * @param string     $message  Message for the Exception.
-     * @param array      $errors   Collection of error values.
+     * @param string $message Message for the Exception.
+     * @param array $errors Collection of error values.
      * @param \Exception $previous Previous exception.
      */
     public function __construct($message, $errors = [], $previous = null)

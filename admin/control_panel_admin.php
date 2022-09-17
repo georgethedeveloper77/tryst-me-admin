@@ -10,7 +10,7 @@ use Parse\ParseUser;
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Control panel</h3> </div>
+            <h3 class="text-primary">Control panel</h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
@@ -42,7 +42,7 @@ use Parse\ParseUser;
 
 
                             echo '<div class="media-body media-text-right">
-                            <h2>'.$registedToday.'</h2>
+                            <h2>' . $registedToday . '</h2>
                             <p class="m-b-0">Registered today</p>
                         </div>';
                             // error in query
@@ -70,7 +70,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">Total Users</p>
                         </div>
                         
@@ -95,7 +95,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">Messages</p>
                         </div>
                         
@@ -123,7 +123,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">Streamings</p>
                         </div>
                         
@@ -199,7 +199,7 @@ use Parse\ParseUser;
                                         }
 
 
-                                        $birthday= $cObj->get('birthday');
+                                        $birthday = $cObj->get('birthday');
 
                                         if ($birthday != null) {
                                             $birthDate = date_format($birthday, "d/m/Y");
@@ -226,14 +226,14 @@ use Parse\ParseUser;
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$name.'</td>
-                                    <td><span>'.$username.'</span></td>
-                                    <td>'.$avatar.'</td>
-                                    <td><span>'.$UserGender.'</span></td>
-                                    <td><span>'.$birthDate.'</span></td>
-                                    <td>'.$age.'</td>
-                                    <td>'.$city_location.'</td>
-                                    <td>'.$verification.'</td>
+                                    <td>' . $name . '</td>
+                                    <td><span>' . $username . '</span></td>
+                                    <td>' . $avatar . '</td>
+                                    <td><span>' . $UserGender . '</span></td>
+                                    <td><span>' . $birthDate . '</span></td>
+                                    <td>' . $age . '</td>
+                                    <td>' . $city_location . '</td>
+                                    <td>' . $verification . '</td>
                                 </tr>
                                 
                                 ';

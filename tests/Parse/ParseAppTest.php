@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ParseAppTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
@@ -24,6 +24,18 @@ class ParseAppTest extends TestCase
 
         $apps = ParseApp::fetchApps();
         $this->assertGreaterThanOrEqual(2, $apps);
+    }
+
+    private static function _createApp($name)
+    {
+        return ParseApp::createApp([
+            'appName' => $name,
+        ]);
+    }
+
+    private static function _getNewName()
+    {
+        return md5(uniqid(rand(), true));
     }
 
     public function testFetchSingleApp()
@@ -103,10 +115,10 @@ class ParseAppTest extends TestCase
         ]);
 
         $updated_app = ParseApp::updateApp($app['applicationId'], [
-            'appName'                       => $updated_name,
-            'clientClassCreationEnabled'    => false,
-            'clientPushEnabled'             => true,
-            'requireRevocableSessions'      => false,
+            'appName' => $updated_name,
+            'clientClassCreationEnabled' => false,
+            'clientPushEnabled' => true,
+            'requireRevocableSessions' => false,
             'revokeSessionOnPasswordChange' => false,
         ]);
 
@@ -115,17 +127,5 @@ class ParseAppTest extends TestCase
         $this->assertNotFalse($updated_app['clientPushEnabled']);
         $this->assertNotTrue($updated_app['requireRevocableSessions']);
         $this->assertNotTrue($updated_app['revokeSessionOnPasswordChange']);
-    }
-
-    private static function _createApp($name)
-    {
-        return ParseApp::createApp([
-            'appName' => $name,
-        ]);
-    }
-
-    private static function _getNewName()
-    {
-        return md5(uniqid(rand(), true));
     }
 }

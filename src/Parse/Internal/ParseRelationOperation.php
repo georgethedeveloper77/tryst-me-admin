@@ -42,8 +42,8 @@ class ParseRelationOperation implements FieldOperation
     /**
      * ParseRelationOperation constructor.
      *
-     * @param ParseObject|ParseObject[] $objectsToAdd       ParseObjects to add
-     * @param ParseObject|ParseObject[] $objectsToRemove    ParseObjects to remove
+     * @param ParseObject|ParseObject[] $objectsToAdd ParseObjects to add
+     * @param ParseObject|ParseObject[] $objectsToRemove ParseObjects to remove
      * @throws Exception
      */
     public function __construct($objectsToAdd, $objectsToRemove)
@@ -92,7 +92,7 @@ class ParseRelationOperation implements FieldOperation
      * Adds an object or array of objects to the array, replacing any
      * existing instance of the same object.
      *
-     * @param array $objects   Array of ParseObjects to add.
+     * @param array $objects Array of ParseObjects to add.
      * @param array $container Array to contain new ParseObjects.
      */
     private function addObjects($objects, &$container)
@@ -110,36 +110,15 @@ class ParseRelationOperation implements FieldOperation
     }
 
     /**
-     * Removes an object (and any duplicate instances of that object) from the array.
-     *
-     * @param array $objects   Array of ParseObjects to remove.
-     * @param array $container Array to remove from it ParseObjects.
-     */
-    private function removeObjects($objects, &$container)
-    {
-        $nullObjects = [];
-        foreach ($objects as $object) {
-            if ($object->getObjectId() == null) {
-                $nullObjects[] = $object;
-            } else {
-                unset($container[$object->getObjectID()]);
-            }
-        }
-        if (!empty($nullObjects)) {
-            self::removeElementsFromArray($nullObjects, $container['null']);
-        }
-    }
-
-    /**
      * Applies the current operation and returns the result.
      *
-     * @param mixed  $oldValue Value prior to this operation.
-     * @param mixed  $object   Value for this operation.
-     * @param string $key      Key to perform this operation on.
-     *
-     * @throws \Exception
+     * @param mixed $oldValue Value prior to this operation.
+     * @param mixed $object Value for this operation.
+     * @param string $key Key to perform this operation on.
      *
      * @return mixed Result of the operation.
+     * @throws \Exception
+     *
      */
     public function _apply($oldValue, $object, $key)
     {
@@ -151,8 +130,8 @@ class ParseRelationOperation implements FieldOperation
             ) {
                 throw new Exception(
                     'Related object object must be of class '
-                    .$this->targetClassName.', but '.$oldValue->getTargetClass()
-                    .' was passed in.',
+                    . $this->targetClassName . ', but ' . $oldValue->getTargetClass()
+                    . ' was passed in.',
                     103
                 );
             }
@@ -169,9 +148,9 @@ class ParseRelationOperation implements FieldOperation
      *
      * @param FieldOperation $previous Previous operation.
      *
+     * @return FieldOperation Merged operation result.
      * @throws \Exception
      *
-     * @return FieldOperation Merged operation result.
      */
     public function _mergeWithPrevious($previous)
     {
@@ -184,8 +163,8 @@ class ParseRelationOperation implements FieldOperation
             ) {
                 throw new Exception(
                     'Related object must be of class '
-                    .$this->targetClassName.', but '.$previous->targetClassName
-                    .' was passed in.',
+                    . $this->targetClassName . ', but ' . $previous->targetClassName
+                    . ' was passed in.',
                     103
                 );
             }
@@ -230,52 +209,45 @@ class ParseRelationOperation implements FieldOperation
     }
 
     /**
-     * Returns an associative array encoding of the current operation.
+     * Convert any array to one dimensional array.
      *
-     * @throws \Exception
+     * @param array $array
      *
-     * @return mixed
+     * @return array
      */
-    public function _encode()
+    public static function convertToOneDimensionalArray($array)
     {
-        $addRelation = [];
-        $removeRelation = [];
-        if (!empty($this->relationsToAdd)) {
-            $addRelation = [
-                '__op'    => 'AddRelation',
-                'objects' => ParseClient::_encode(
-                    self::convertToOneDimensionalArray($this->relationsToAdd),
-                    true
-                ),
-            ];
-        }
-        if (!empty($this->relationsToRemove)) {
-            $removeRelation = [
-                '__op'    => 'RemoveRelation',
-                'objects' => ParseClient::_encode(
-                    self::convertToOneDimensionalArray($this->relationsToRemove),
-                    true
-                ),
-            ];
-        }
-        if (!empty($addRelation['objects']) && !empty($removeRelation['objects'])) {
-            return [
-                '__op' => 'Batch',
-                'ops'  => [$addRelation, $removeRelation],
-            ];
+        $newArray = [];
+        if (is_array($array)) {
+            foreach ($array as $value) {
+                $newArray = array_merge($newArray, self::convertToOneDimensionalArray($value));
+            }
+        } else {
+            $newArray[] = $array;
         }
 
-        return empty($addRelation['objects']) ? $removeRelation : $addRelation;
+        return $newArray;
     }
 
     /**
-     * Gets the className of the target objects.
+     * Removes an object (and any duplicate instances of that object) from the array.
      *
-     * @return null|string
+     * @param array $objects Array of ParseObjects to remove.
+     * @param array $container Array to remove from it ParseObjects.
      */
-    public function _getTargetClass()
+    private function removeObjects($objects, &$container)
     {
-        return $this->targetClassName;
+        $nullObjects = [];
+        foreach ($objects as $object) {
+            if ($object->getObjectId() == null) {
+                $nullObjects[] = $object;
+            } else {
+                unset($container[$object->getObjectID()]);
+            }
+        }
+        if (!empty($nullObjects)) {
+            self::removeElementsFromArray($nullObjects, $container['null']);
+        }
     }
 
     /**
@@ -306,23 +278,51 @@ class ParseRelationOperation implements FieldOperation
     }
 
     /**
-     * Convert any array to one dimensional array.
+     * Returns an associative array encoding of the current operation.
      *
-     * @param array $array
+     * @return mixed
+     * @throws \Exception
      *
-     * @return array
      */
-    public static function convertToOneDimensionalArray($array)
+    public function _encode()
     {
-        $newArray = [];
-        if (is_array($array)) {
-            foreach ($array as $value) {
-                $newArray = array_merge($newArray, self::convertToOneDimensionalArray($value));
-            }
-        } else {
-            $newArray[] = $array;
+        $addRelation = [];
+        $removeRelation = [];
+        if (!empty($this->relationsToAdd)) {
+            $addRelation = [
+                '__op' => 'AddRelation',
+                'objects' => ParseClient::_encode(
+                    self::convertToOneDimensionalArray($this->relationsToAdd),
+                    true
+                ),
+            ];
+        }
+        if (!empty($this->relationsToRemove)) {
+            $removeRelation = [
+                '__op' => 'RemoveRelation',
+                'objects' => ParseClient::_encode(
+                    self::convertToOneDimensionalArray($this->relationsToRemove),
+                    true
+                ),
+            ];
+        }
+        if (!empty($addRelation['objects']) && !empty($removeRelation['objects'])) {
+            return [
+                '__op' => 'Batch',
+                'ops' => [$addRelation, $removeRelation],
+            ];
         }
 
-        return $newArray;
+        return empty($addRelation['objects']) ? $removeRelation : $addRelation;
+    }
+
+    /**
+     * Gets the className of the target objects.
+     *
+     * @return null|string
+     */
+    public function _getTargetClass()
+    {
+        return $this->targetClassName;
     }
 }

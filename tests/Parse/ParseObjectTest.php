@@ -20,22 +20,21 @@ use Parse\ParseQuery;
 use Parse\ParseRole;
 use Parse\ParseSession;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseObjectTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::setHttpClient();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
     }
@@ -1099,7 +1098,7 @@ class ParseObjectTest extends TestCase
     {
         $this->expectException(
             '\Exception',
-            'You must initialize the ParseClient using ParseClient::initialize '.
+            'You must initialize the ParseClient using ParseClient::initialize ' .
             'and your Parse API keys before you can begin working with Objects.'
         );
         ParseUser::_unregisterSubclass();
@@ -1118,8 +1117,8 @@ class ParseObjectTest extends TestCase
 
         $this->expectException(
             '\Exception',
-            'You must specify a Parse class name or register the appropriate '.
-            'subclass when creating a new Object.    Use ParseObject::create to '.
+            'You must specify a Parse class name or register the appropriate ' .
+            'subclass when creating a new Object.    Use ParseObject::create to ' .
             'create a subclass object.'
         );
 
@@ -1199,9 +1198,9 @@ class ParseObjectTest extends TestCase
         $estimatedData = $obj->getAllKeys();
 
         $this->assertEquals([
-            'key1'  => 'value1',
-            'key2'  => 'value2',
-            'key3'  => 'value3'
+            'key1' => 'value1',
+            'key2' => 'value2',
+            'key3' => 'value3'
         ], $estimatedData);
     }
 
@@ -1426,12 +1425,12 @@ class ParseObjectTest extends TestCase
         $obj->save();
 
         $obj->_mergeAfterFetch([
-            '__type'    => 'className',
-            'key'       => 'new value',
-            'ACL'       => [
-                'u1'        => [
-                    'write'     => false,
-                    'read'      => true
+            '__type' => 'className',
+            'key' => 'new value',
+            'ACL' => [
+                'u1' => [
+                    'write' => false,
+                    'read' => true
                 ]
             ]
         ]);
@@ -1452,10 +1451,10 @@ class ParseObjectTest extends TestCase
     public function testEncodeWithArray()
     {
         $obj = new ParseObject('TestClass');
-        $obj->setArray('arraykey', ['value1','value2']);
+        $obj->setArray('arraykey', ['value1', 'value2']);
 
         $encoded = json_decode($obj->_encode(), true);
-        $this->assertEquals($encoded['arraykey'], ['value1','value2']);
+        $this->assertEquals($encoded['arraykey'], ['value1', 'value2']);
     }
 
     public function testToPointerWithoutId()
@@ -1517,17 +1516,45 @@ class ParseObjectTest extends TestCase
 
         $obj = new ParseObject('TestClass');
         // set an Encodable value
-        $encodable1 = new SetOperation(['key'=>'value']);
+        $encodable1 = new SetOperation(['key' => 'value']);
         $obj->set('key1', $encodable1);
 
         // set an Encodable array value
-        $encodable2 = new SetOperation(['anotherkey'=>'anothervalue']);
+        $encodable2 = new SetOperation(['anotherkey' => 'anothervalue']);
         $obj->setArray('key2', [$encodable2]);
 
         $encoded = json_decode($obj->_encode(), true);
 
         $this->assertEquals($encoded['key1'], $encodable1->_encode());
         $this->assertEquals($encoded['key2'][0], $encodable2->_encode());
+    }
+
+    /**
+     * Runs tests on encoding/decoding an unsaved ParseObject
+     * @group decode-test
+     */
+    public function testDecodeOnObject()
+    {
+        $obj = $this->getTestObject();
+
+        $encoded = $obj->encode();
+        $decoded = ParseObject::decode($encoded);
+
+        // pull out file to compare separately
+        $decodedFile = $decoded->get('file');
+        $origFile = $obj->get('file');
+        $decoded->delete('file');
+        $obj->delete('file');
+
+        $this->assertEquals($obj, $decoded, 'Objects did not match');
+
+        // check files separately
+        $this->assertEquals($origFile->_encode(), $decodedFile->_encode(), 'Files did not match');
+
+        // check that we can still revert these changes
+        $this->assertTrue($obj->has('foo'));
+        $obj->revert();
+        $this->assertFalse($obj->has('foo'));
     }
 
     /**
@@ -1540,23 +1567,23 @@ class ParseObjectTest extends TestCase
         $obj = new ParseObject('TestClass');
 
         // setup IVs
-        $stringVal  = 'this-is-foo';
-        $numberVal  = 32.23;
+        $stringVal = 'this-is-foo';
+        $numberVal = 32.23;
 
         // use a 'clean' date value
-        $dateVal    = new \DateTime();
-        $dateVal    = ParseClient::_encode($dateVal, false);
-        $dateVal    = ParseClient::_decode($dateVal);
+        $dateVal = new \DateTime();
+        $dateVal = ParseClient::_encode($dateVal, false);
+        $dateVal = ParseClient::_decode($dateVal);
 
-        $boolVal    = false;
-        $arrayVal   = ['bar1','bar2'];
-        $assocVal   = ['foo1' => 'bar1'];
-        $polygon    = new ParsePolygon([[0,0],[0,1],[1,1]]);
-        $geoPoint   = new ParseGeoPoint(1, 0);
+        $boolVal = false;
+        $arrayVal = ['bar1', 'bar2'];
+        $assocVal = ['foo1' => 'bar1'];
+        $polygon = new ParsePolygon([[0, 0], [0, 1], [1, 1]]);
+        $geoPoint = new ParseGeoPoint(1, 0);
 
-        $child      = new ParseObject('TestClass');
+        $child = new ParseObject('TestClass');
         $child->save();
-        $child      = ParseObject::create('TestClass', $child->getObjectId());
+        $child = ParseObject::create('TestClass', $child->getObjectId());
 
         $file = ParseFile::createFromData('a file', 'test.txt', 'text/plain');
         $file->save();
@@ -1584,34 +1611,6 @@ class ParseObjectTest extends TestCase
     }
 
     /**
-     * Runs tests on encoding/decoding an unsaved ParseObject
-     * @group decode-test
-     */
-    public function testDecodeOnObject()
-    {
-        $obj = $this->getTestObject();
-
-        $encoded = $obj->encode();
-        $decoded = ParseObject::decode($encoded);
-
-        // pull out file to compare separately
-        $decodedFile = $decoded->get('file');
-        $origFile    = $obj->get('file');
-        $decoded->delete('file');
-        $obj->delete('file');
-
-        $this->assertEquals($obj, $decoded, 'Objects did not match');
-
-        // check files separately
-        $this->assertEquals($origFile->_encode(), $decodedFile->_encode(), 'Files did not match');
-
-        // check that we can still revert these changes
-        $this->assertTrue($obj->has('foo'));
-        $obj->revert();
-        $this->assertFalse($obj->has('foo'));
-    }
-
-    /**
      * Runs tests on encoding/decoding a ParseObject that has been saved
      *
      * @group decode-test
@@ -1619,17 +1618,17 @@ class ParseObjectTest extends TestCase
     public function testDecodeOnSavedObject()
     {
         // setup IVs
-        $stringVal  = 'this-is-foo';
-        $numberVal  = 32.23;
-        $boolVal    = false;
-        $arrayVal   = ['bar1','bar2'];
-        $assocVal   = ['foo1' => 'bar1'];
-        $polygon    = new ParsePolygon([[0,0],[0,1],[1,1]]);
-        $geoPoint   = new ParseGeoPoint(1, 0);
+        $stringVal = 'this-is-foo';
+        $numberVal = 32.23;
+        $boolVal = false;
+        $arrayVal = ['bar1', 'bar2'];
+        $assocVal = ['foo1' => 'bar1'];
+        $polygon = new ParsePolygon([[0, 0], [0, 1], [1, 1]]);
+        $geoPoint = new ParseGeoPoint(1, 0);
 
-        $child      = new ParseObject('TestClass');
+        $child = new ParseObject('TestClass');
         $child->save();
-        $child      = ParseObject::create('TestClass', $child->getObjectId());
+        $child = ParseObject::create('TestClass', $child->getObjectId());
 
         $obj = $this->getTestObject();
 
@@ -1700,7 +1699,7 @@ class ParseObjectTest extends TestCase
         $this->assertEquals(0, $query->count());
 
         // cleanup
-        ParseObject::destroyAll([$decoded,$child]);
+        ParseObject::destroyAll([$decoded, $child]);
     }
 
     /**
@@ -1771,7 +1770,7 @@ class ParseObjectTest extends TestCase
         $encoded = $obj->encode();
         $encoded = json_decode($encoded, true);
         $encoded['operationSet'][] = [
-            '__op'  => 'Unrecognized'
+            '__op' => 'Unrecognized'
         ];
         ParseObject::decode($encoded);
     }

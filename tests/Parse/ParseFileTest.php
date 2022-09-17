@@ -5,17 +5,16 @@ namespace Parse\Test;
 use Parse\ParseFile;
 use Parse\ParseObject;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseFileTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
         Helper::clearClass('TestFileObject');
@@ -26,7 +25,7 @@ class ParseFileTest extends TestCase
         $file = ParseFile::_createFromServer('hi.txt', 'http://');
         $file2 = ParseFile::createFromData('hello', 'hi.txt');
         $file3 = ParseFile::createFromFile(
-            APPLICATION_PATH.'/tests/Parse/ParseFileTest.php',
+            APPLICATION_PATH . '/tests/Parse/ParseFileTest.php',
             'file.php'
         );
         $this->assertEquals('http://', $file->getURL());

@@ -9,12 +9,11 @@ use Parse\Internal\AddOperation;
 use Parse\Internal\DeleteOperation;
 use Parse\Internal\IncrementOperation;
 use Parse\Internal\SetOperation;
-
 use PHPUnit\Framework\TestCase;
 
 class IncrementOperationTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
@@ -62,6 +61,6 @@ class IncrementOperationTest extends TestCase
             'Operation is invalid after previous operation.'
         );
         $addOp = new IncrementOperation();
-        $addOp->_mergeWithPrevious(new AddOperation(['key'  => 'value']));
+        $addOp->_mergeWithPrevious(new AddOperation(['key' => 'value']));
     }
 }

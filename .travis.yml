@@ -1,28 +1,28 @@
 language: php
 dist: trusty
 php:
-- '7.1'
-- '7.2'
-- '7.3'
+  - '7.1'
+  - '7.2'
+  - '7.3'
 cache:
   directories:
-  - node_modules
-  - vendor
+    - node_modules
+    - vendor
 before_install:
-- nvm install 8.11
-- sudo apt-get install graphviz
+  - nvm install 8.11
+  - sudo apt-get install graphviz
 install:
-- composer install
-- npm install
+  - composer install
+  - npm install
 before_script:
-- npm start 1>&2
-- npm run lint
+  - npm start 1>&2
+  - npm run lint
 before_deploy:
-- npm run document
+  - npm run document
 script:
-- npm run test:coverage
-- if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then npm run document-check && if [[
-  `cat "output/checkstyle.xml" | grep "<error "` != "" ]]; then exit 1; fi fi
+  - npm run test:coverage
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then npm run document-check && if [[
+    `cat "output/checkstyle.xml" | grep "<error "` != "" ]]; then exit 1; fi fi
 deploy:
   provider: pages
   skip_cleanup: true
@@ -33,4 +33,4 @@ deploy:
     branch: master
     php: '7.1'
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)

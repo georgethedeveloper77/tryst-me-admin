@@ -1,6 +1,7 @@
 <?php
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
 use Parse\ParseException;
@@ -11,10 +12,10 @@ use Parse\ParseUser;
 //session_start();
 
 $currUser = ParseUser::getCurrentUser();
-if ($currUser){
+if ($currUser) {
 
     // Store current user session token, to restore in case we create new user
-    $_SESSION['token'] = $currUser -> getSessionToken();
+    $_SESSION['token'] = $currUser->getSessionToken();
 } else {
 
     header("Refresh:0; url=../index.php");
@@ -26,7 +27,7 @@ if ($currUser){
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Processing Payouts</h3> </div>
+            <h3 class="text-primary">Processing Payouts</h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Accounting</a></li>
@@ -52,7 +53,7 @@ if ($currUser){
                     $query->equalTo("status", "processing");
                     $messagesCounter = $query->count(true);
 
-                    echo ' <h2 class="card-title">'.$messagesCounter.' Payouts in total</h2> ';
+                    echo ' <h2 class="card-title">' . $messagesCounter . ' Payouts in total</h2> ';
 
                     ?>
 
@@ -60,7 +61,8 @@ if ($currUser){
                     <div class="card-body">
                         <div class="table-responsive">
                             <!--<table class="table">-->
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                                   cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
                                     <th>ObjectId</th>
@@ -88,26 +90,26 @@ if ($currUser){
                                         $cObj = $iValue;
 
                                         $objectId = $cObj->getObjectId();
-                                        $date= $cObj->getCreatedAt();
-                                        $created = date_format($date,"d/m/Y");
+                                        $date = $cObj->getCreatedAt();
+                                        $created = date_format($date, "d/m/Y");
 
                                         $amount = $cObj->get('amount');
                                         $currency = $cObj->get('currency');
 
                                         $iban = $cObj->get('IBAN');
                                         $bank_name = $cObj->get('bank_name');
-                                        $bank_name_final ="<span class=\"badge badge-warning\">$bank_name</span>";
+                                        $bank_name_final = "<span class=\"badge badge-warning\">$bank_name</span>";
                                         $account_name = $cObj->get('account_name');
 
                                         $amount_current = sprintf("%d %s ", $amount, $currency);
 
                                         $method = $cObj->get('method');
 
-                                        if ($method === "payoneer"){
+                                        if ($method === "payoneer") {
                                             $destination = $cObj->get('email');
                                             $fromName = $cObj->get('author')->get('name');
 
-                                        } else if ($method === "IBAN"){
+                                        } else if ($method === "IBAN") {
                                             $destination = sprintf("%s \n %s ", $bank_name_final, $iban);
                                             $fromName = $account_name;
 
@@ -121,27 +123,28 @@ if ($currUser){
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td>'.$created.'</td>
-                                    <td>'.$fromName.'</td>
-                                    <td>'.$amount_current.'</td>
-                                    <td>'.$method.'</td>
-                                    <td>'.$destination.'</td>
-                                    <td>'.$status.'</td>
+                                    <td>' . $objectId . '</td>
+                                    <td>' . $created . '</td>
+                                    <td>' . $fromName . '</td>
+                                    <td>' . $amount_current . '</td>
+                                    <td>' . $method . '</td>
+                                    <td>' . $destination . '</td>
+                                    <td>' . $status . '</td>
          
                                 </tr>
                                 
                                 ';
                                     }
                                     // error in query
-                                } catch (ParseException $e){ echo $e->getMessage(); }
+                                } catch (ParseException $e) {
+                                    echo $e->getMessage();
+                                }
                                 ?>
 
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
 
 
                 </div>

@@ -3,19 +3,24 @@
 namespace Parse\Test;
 
 use Parse\ParseAnalytics;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseAnalyticsTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
+    }
+
+    public function testTrackEvent()
+    {
+        $expected = '{"dimensions":{}}';
+        $this->assertAnalyticsValidation('testTrackEvent', null, $expected);
     }
 
     public function assertAnalyticsValidation($event, $params, $expectedJSON)
@@ -25,12 +30,6 @@ class ParseAnalyticsTest extends TestCase
         $json = ParseAnalytics::_toSaveJSON($params ?: []);
         $this->assertEquals($expectedJSON, $json);
         ParseAnalytics::track($event, $params ?: []);
-    }
-
-    public function testTrackEvent()
-    {
-        $expected = '{"dimensions":{}}';
-        $this->assertAnalyticsValidation('testTrackEvent', null, $expected);
     }
 
     public function testFailsOnEventName1()
@@ -70,11 +69,11 @@ class ParseAnalyticsTest extends TestCase
         $this->assertAnalyticsValidation('testDimensions', $params, $expected);
 
         $date = date(DATE_RFC3339);
-        $expected = '{"dimensions":{"foo":"bar","bar":"baz","someDate":"'.
-            $date.'"}}';
+        $expected = '{"dimensions":{"foo":"bar","bar":"baz","someDate":"' .
+            $date . '"}}';
         $params = [
-            'foo'      => 'bar',
-            'bar'      => 'baz',
+            'foo' => 'bar',
+            'bar' => 'baz',
             'someDate' => $date,
         ];
         $this->assertAnalyticsValidation('testDate', $params, $expected);
@@ -86,7 +85,7 @@ class ParseAnalyticsTest extends TestCase
             '\Exception',
             'Dimensions expected string keys and values.'
         );
-        ParseAnalytics::track('event', [1=>'good-value']);
+        ParseAnalytics::track('event', [1 => 'good-value']);
     }
 
     public function testBadValueDimension()
@@ -95,6 +94,6 @@ class ParseAnalyticsTest extends TestCase
             '\Exception',
             'Dimensions expected string keys and values.'
         );
-        ParseAnalytics::track('event', ['good-key'=>1]);
+        ParseAnalytics::track('event', ['good-key' => 1]);
     }
 }

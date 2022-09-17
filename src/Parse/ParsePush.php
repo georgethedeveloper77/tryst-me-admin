@@ -18,7 +18,7 @@ class ParsePush
     /**
      * Sends a push notification.
      *
-     * @param array $data         The data of the push notification.    Valid fields
+     * @param array $data The data of the push notification.    Valid fields
      *                            are:
      *                            channels - An Array of channels to push to.
      *                            push_time - A Date object for when to send the push.
@@ -28,11 +28,11 @@ class ParsePush
      *                            where - A ParseQuery over ParseInstallation that is used to match
      *                            a set of installations to push to.
      *                            data - The data to send as part of the push
-     * @param bool  $useMasterKey Whether to use the Master Key for the request
-     *
-     * @throws \Exception, ParseException
+     * @param bool $useMasterKey Whether to use the Master Key for the request
      *
      * @return mixed
+     * @throws Exception, ParseException
+     *
      */
     public static function send($data, $useMasterKey = false)
     {
@@ -88,12 +88,12 @@ class ParsePush
      * Returns whether or not the given response has a push status
      * Checks to see if X-Push-Status-Id is present in $response
      *
-     * @param array $response    Response from ParsePush::send
+     * @param array $response Response from ParsePush::send
      * @return bool
      */
     public static function hasStatus($response)
     {
-        return(
+        return (
             isset($response['_headers']) &&
             isset($response['_headers']['X-Parse-Push-Status-Id'])
         );
@@ -102,7 +102,7 @@ class ParsePush
     /**
      * Returns the PushStatus for a response from ParsePush::send
      *
-     * @param array $response   Response from ParsePush::send
+     * @param array $response Response from ParsePush::send
      * @return null|ParsePushStatus
      */
     public static function getStatus($response)

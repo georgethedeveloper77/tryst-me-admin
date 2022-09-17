@@ -13,23 +13,22 @@ use Parse\ParseMemoryStorage;
 use Parse\ParseObject;
 use Parse\ParseRole;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseClientTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::setServerURL();
         Helper::setHttpClient();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
 
@@ -66,7 +65,7 @@ class ParseClientTest extends TestCase
     {
         $this->expectException(
             '\Exception',
-            'You must call ParseClient::initialize(..., $accountKey) before making any app requests. '.
+            'You must call ParseClient::initialize(..., $accountKey) before making any app requests. ' .
             'Your account key must not be null or empty.'
         );
 
@@ -528,8 +527,8 @@ class ParseClientTest extends TestCase
     {
         $this->expectException(
             '\Exception',
-            'Missing a valid server url. '.
-            'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') '.
+            'Missing a valid server url. ' .
+            'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') ' .
             ' before making any requests.'
         );
 
@@ -544,8 +543,8 @@ class ParseClientTest extends TestCase
     {
         $this->expectException(
             '\Exception',
-            'Missing a valid mount path. '.
-            'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') '.
+            'Missing a valid mount path. ' .
+            'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') ' .
             ' before making any requests.'
         );
 

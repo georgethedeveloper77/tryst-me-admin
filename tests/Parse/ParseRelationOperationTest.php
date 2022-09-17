@@ -8,17 +8,16 @@ namespace Parse\Test;
 use Parse\Internal\ParseRelationOperation;
 use Parse\ParseObject;
 use Parse\ParseRelation;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseRelationOperationTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::clearClass('Class1');
     }
@@ -80,8 +79,8 @@ class ParseRelationOperationTest extends TestCase
         $this->expectException(
             '\Exception',
             'Related object object must be of class '
-            .'Class1, but DifferentClass'
-            .' was passed in.'
+            . 'Class1, but DifferentClass'
+            . ' was passed in.'
         );
 
         // create one op
@@ -123,8 +122,8 @@ class ParseRelationOperationTest extends TestCase
         $this->expectException(
             '\Exception',
             'Related object must be of class '
-            .'Class1, but AnotherClass'
-            .' was passed in.'
+            . 'Class1, but AnotherClass'
+            . ' was passed in.'
         );
 
         $addObj = new ParseObject('Class1');
@@ -157,7 +156,7 @@ class ParseRelationOperationTest extends TestCase
     {
         // test without passing an array
         $array = [
-          'removeThis'
+            'removeThis'
         ];
         ParseRelationOperation::removeElementsFromArray('removeThis', $array);
 

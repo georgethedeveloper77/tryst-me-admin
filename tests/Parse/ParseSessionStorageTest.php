@@ -4,7 +4,6 @@ namespace Parse\Test;
 
 use Parse\ParseClient;
 use Parse\ParseSessionStorage;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseSessionStorageTest extends TestCase
@@ -14,7 +13,7 @@ class ParseSessionStorageTest extends TestCase
      */
     private static $parseStorage;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         ParseClient::_unsetStorage();
 
@@ -32,15 +31,15 @@ class ParseSessionStorageTest extends TestCase
         self::$parseStorage = ParseClient::getStorage();
     }
 
-    public function tearDown() : void
+    public static function tearDownAfterClass(): void
+    {
+        session_destroy();
+    }
+
+    public function tearDown(): void
     {
         Helper::tearDown();
         self::$parseStorage->clear();
-    }
-
-    public static function tearDownAfterClass() : void
-    {
-        session_destroy();
     }
 
     public function testIsUsingParseSession()

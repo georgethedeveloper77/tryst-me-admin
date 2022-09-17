@@ -14,19 +14,19 @@ class ParseHooksTest extends TestCase
      */
     private static $hooks;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         $createClass = new ParseSchema('Game');
         $createClass->save();
         self::$hooks = new ParseHooks();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         $createClass = new ParseSchema('Game');
         $createClass->delete();
@@ -98,17 +98,17 @@ class ParseHooksTest extends TestCase
         $trigger = self::$hooks->createTrigger('Game', 'beforeSave', 'https://api.example.com/Game/beforeSave');
         // validate
         $this->assertEquals([
-            'className'   => 'Game',
+            'className' => 'Game',
             'triggerName' => 'beforeSave',
-            'url'         => 'https://api.example.com/Game/beforeSave',
+            'url' => 'https://api.example.com/Game/beforeSave',
         ], $trigger);
 
         // fetch and revalidate
         $trigger = self::$hooks->fetchTrigger('Game', 'beforeSave');
         $this->assertEquals([
-            'className'   => 'Game',
+            'className' => 'Game',
             'triggerName' => 'beforeSave',
-            'url'         => 'https://api.example.com/Game/beforeSave',
+            'url' => 'https://api.example.com/Game/beforeSave',
         ], $trigger);
 
 
@@ -151,9 +151,9 @@ class ParseHooksTest extends TestCase
 
         $edited_trigger = self::$hooks->editTrigger('Game', 'beforeSave', 'https://api.example.com/Game/_beforeSave');
         $this->assertEquals([
-            'className'   => 'Game',
+            'className' => 'Game',
             'triggerName' => 'beforeSave',
-            'url'         => 'https://api.example.com/Game/_beforeSave',
+            'url' => 'https://api.example.com/Game/_beforeSave',
         ], $edited_trigger);
 
         self::$hooks->deleteTrigger('Game', 'beforeSave');
@@ -188,16 +188,16 @@ class ParseHooksTest extends TestCase
 
         $this->assertEquals([
             [
-                'functionName'  => 'func1',
-                'url'           => 'http://example1.com'
+                'functionName' => 'func1',
+                'url' => 'http://example1.com'
             ],
             [
-                'functionName'  => 'func2',
-                'url'           => 'http://example2.com'
+                'functionName' => 'func2',
+                'url' => 'http://example2.com'
             ],
             [
-                'functionName'  => 'func3',
-                'url'           => 'http://example3.com'
+                'functionName' => 'func3',
+                'url' => 'http://example3.com'
             ]
         ], $functions);
 

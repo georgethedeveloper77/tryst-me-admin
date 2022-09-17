@@ -15,13 +15,27 @@ class ParseLogs
 {
 
     /**
+     * Returns info logs
+     *
+     * @param int $size Lines to return, 100 by default
+     * @param null $from Earliest logs to return from, default is 1 week ago
+     * @param null $until Latest logs to return from, defaults to current time
+     * @param null $order Order to sort logs by (asc/desc), defaults to descending
+     * @return array
+     */
+    public static function getInfoLogs($size = 100, $from = null, $until = null, $order = null)
+    {
+        return self::getScriptLogs('info', $size, $from, $until, $order);
+    }
+
+    /**
      * Requests script logs from the server
      *
      * @param string $level Level of logs to return (info/error), default is info
-     * @param int $size     Number of rows to return, default is 100
-     * @param null $from    Earliest logs to return from, defaults to 1 week ago
-     * @param null $until   Latest logs to return from, defaults to current time
-     * @param null $order   Order to sort logs by (asc/desc), defaults to descending
+     * @param int $size Number of rows to return, default is 100
+     * @param null $from Earliest logs to return from, defaults to 1 week ago
+     * @param null $until Latest logs to return from, defaults to current time
+     * @param null $order Order to sort logs by (asc/desc), defaults to descending
      * @return array
      */
     public static function getScriptLogs(
@@ -30,10 +44,11 @@ class ParseLogs
         $from = null,
         $until = null,
         $order = null
-    ) {
+    )
+    {
         $data = [
             'level' => $level,
-            'size'  => $size,
+            'size' => $size,
         ];
 
         if (isset($from) && $from instanceof \DateTime) {
@@ -60,26 +75,12 @@ class ParseLogs
     }
 
     /**
-     * Returns info logs
-     *
-     * @param int $size     Lines to return, 100 by default
-     * @param null $from    Earliest logs to return from, default is 1 week ago
-     * @param null $until   Latest logs to return from, defaults to current time
-     * @param null $order   Order to sort logs by (asc/desc), defaults to descending
-     * @return array
-     */
-    public static function getInfoLogs($size = 100, $from = null, $until = null, $order = null)
-    {
-        return self::getScriptLogs('info', $size, $from, $until, $order);
-    }
-
-    /**
      * Returns error logs
      *
-     * @param int $size     Lines to return, 100 by default
-     * @param null $from    Earliest logs to return from, default is 1 week ago
-     * @param null $until   Latest logs to return from, defaults to current time
-     * @param null $order   Order to sort logs by (asc/desc), defaults to descending
+     * @param int $size Lines to return, 100 by default
+     * @param null $from Earliest logs to return from, default is 1 week ago
+     * @param null $until Latest logs to return from, defaults to current time
+     * @param null $order Order to sort logs by (asc/desc), defaults to descending
      * @return array
      */
     public static function getErrorLogs($size = 100, $from = null, $until = null, $order = null)

@@ -23,7 +23,7 @@ class ParseRole extends ParseObject
     /**
      * Create a ParseRole object with a given name and ACL.
      *
-     * @param string   $name
+     * @param string $name
      * @param ParseACL $acl
      *
      * @return ParseRole
@@ -35,16 +35,6 @@ class ParseRole extends ParseObject
         $role->setACL($acl);
 
         return $role;
-    }
-
-    /**
-     * Returns the role name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->get('name');
     }
 
     /**
@@ -116,5 +106,15 @@ class ParseRole extends ParseObject
         }
 
         return parent::save($useMasterKey);
+    }
+
+    /**
+     * Returns the role name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->get('name');
     }
 }

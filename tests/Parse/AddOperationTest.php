@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class AddOperationTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
@@ -23,7 +23,7 @@ class AddOperationTest extends TestCase
     public function testAddOperation()
     {
         $objects = [
-            'key'   => 'val'
+            'key' => 'val'
         ];
         $addOp = new AddOperation($objects);
 
@@ -48,7 +48,7 @@ class AddOperationTest extends TestCase
     public function testMergePrevious()
     {
         $addOp = new AddOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
 
         $this->assertEquals($addOp, $addOp->_mergeWithPrevious(null));
@@ -62,15 +62,15 @@ class AddOperationTest extends TestCase
         $this->assertTrue($merged instanceof SetOperation);
         $this->assertEquals([
             'newvalue',
-            'key1'  => 'value1'
+            'key1' => 'value1'
         ], $merged->getValue(), 'Value was not as expected');
 
         // check self
-        $merged = $addOp->_mergeWithPrevious(new AddOperation(['key2'   => 'value2']));
+        $merged = $addOp->_mergeWithPrevious(new AddOperation(['key2' => 'value2']));
         $this->assertTrue($merged instanceof SetOperation);
         $this->assertEquals([
-            'key2'  => 'value2',
-            'key1'  => 'value1'
+            'key2' => 'value2',
+            'key1' => 'value1'
         ], $merged->getValue(), 'Value was not as expected');
     }
 
@@ -84,7 +84,7 @@ class AddOperationTest extends TestCase
             'Operation is invalid after previous operation.'
         );
         $addOp = new AddOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
         $addOp->_mergeWithPrevious(new \DateTime());
     }

@@ -41,24 +41,14 @@ class RemoveOperation implements FieldOperation
     }
 
     /**
-     * Gets the objects for this operation.
-     *
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->objects;
-    }
-
-    /**
      * Returns associative array representing encoded operation.
      *
      * @return array
      */
     public function _encode()
     {
-        return ['__op'    => 'Remove',
-                'objects' => ParseClient::_encode($this->objects, true), ];
+        return ['__op' => 'Remove',
+            'objects' => ParseClient::_encode($this->objects, true),];
     }
 
     /**
@@ -66,9 +56,9 @@ class RemoveOperation implements FieldOperation
      *
      * @param FieldOperation $previous Previous operation.
      *
+     * @return FieldOperation Merged operation.
      * @throws ParseException
      *
-     * @return FieldOperation Merged operation.
      */
     public function _mergeWithPrevious($previous)
     {
@@ -87,7 +77,7 @@ class RemoveOperation implements FieldOperation
             $oldList = $previous->getValue();
 
             return new self(
-                array_merge((array) $oldList, (array) $this->objects)
+                array_merge((array)$oldList, (array)$this->objects)
             );
         }
         throw new ParseException(
@@ -98,9 +88,9 @@ class RemoveOperation implements FieldOperation
     /**
      * Applies current operation, returns resulting value.
      *
-     * @param mixed  $oldValue Value prior to this operation.
-     * @param mixed  $obj      Value being applied.
-     * @param string $key      Key this operation affects.
+     * @param mixed $oldValue Value prior to this operation.
+     * @param mixed $obj Value being applied.
+     * @param string $key Key this operation affects.
      *
      * @return array
      */
@@ -135,5 +125,15 @@ class RemoveOperation implements FieldOperation
         }
 
         return $newValue;
+    }
+
+    /**
+     * Gets the objects for this operation.
+     *
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->objects;
     }
 }

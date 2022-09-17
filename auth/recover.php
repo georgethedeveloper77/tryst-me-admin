@@ -2,11 +2,11 @@
 require '../vendor/autoload.php';
 include '../Configs.php';
 
-use Parse\ParseUser;
 use Parse\ParseException;
+use Parse\ParseUser;
 
 // FORGOT PASSWORD -----------------------------------
-if(isset($_GET['email'])) {
+if (isset($_GET['email'])) {
     $email = $_GET['email'];
 
     try {
@@ -25,7 +25,7 @@ if(isset($_GET['email'])) {
 <!-- header -->
 
 <head>
-    <title>Heyto Live Dashboard - Recover</title>
+    <title>TrystMe - Admin Recover</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -60,9 +60,9 @@ if(isset($_GET['email'])) {
             </div>
 
             <form class="login100-form validate-form">
-					<span class="login100-form-title">Forgot your password? No problem</span>
+                <span class="login100-form-title">Forgot your password? No problem</span>
 
-                <div class="wrap-input100 validate-input" data-validate = "Seu email por favor">
+                <div class="wrap-input100 validate-input" data-validate="Seu email por favor">
                     <input class="input100" type="email" name="email" placeholder="Email">
                     <span class="focus-input100"></span>
                     <span class="symbol-input100"><i class="fa fa-envelope" aria-hidden="true"></i></span>
@@ -73,7 +73,7 @@ if(isset($_GET['email'])) {
                 </div>
 
                 <div class="text-center p-t-12">
-						<span class="txt1">You Remember? </span>
+                    <span class="txt1">You Remember? </span>
                     <a class="txt2" href="login.php">Username or Password?</a>
                 </div>
 
@@ -93,7 +93,7 @@ if(isset($_GET['email'])) {
 <script src="../vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
 <script src="../vendor/tilt/tilt.jquery.min.js"></script>
-<script >
+<script>
     $('.js-tilt').tilt({
         scale: 1.1
     })
@@ -111,7 +111,8 @@ if(isset($_GET['email'])) {
 function showSweetAlert($title, $explain, $type)
 {
     echo '<script type="text/javascript">
-    setTimeout(function () { swal("'.$title.'","'.$explain.'","'.$type.'");
+    setTimeout(function () { swal("' . $title . '","' . $explain . '","' . $type . '");
     }, 1000);</script>';
 }
+
 ?>

@@ -7,6 +7,7 @@ namespace Parse;
 
 use Exception;
 use Parse\Internal\Encodable;
+use stdClass;
 
 /**
  * Class ParseACL - is used to control which users can access or modify a particular
@@ -22,48 +23,42 @@ use Parse\Internal\Encodable;
 class ParseACL implements Encodable
 {
     const PUBLIC_KEY = '*';
-
-    /**
-     * Array of permissions by id
-     *
-     * @var array
-     */
-    private $permissionsById = [];
-
-    /**
-     * Whether this ACL is shared
-     *
-     * @var bool
-     */
-    private $shared = false;
-
     /**
      * The last known current user
      *
      * @var ParseUser
      */
     private static $lastCurrentUser = null;
-
     /**
      * An ACL with defaults set with the current user
      *
      * @var ParseACL
      */
     private static $defaultACLWithCurrentUser = null;
-
     /**
      * An ACL with defaults set
      *
      * @var ParseACL
      */
     private static $defaultACL = null;
-
     /**
      * Whether the default acl uses the current user or not
      *
      * @var bool
      */
     private static $defaultACLUsesCurrentUser = false;
+    /**
+     * Array of permissions by id
+     *
+     * @var array
+     */
+    private $permissionsById = [];
+    /**
+     * Whether this ACL is shared
+     *
+     * @var bool
+     */
+    private $shared = false;
 
     /**
      * Create new ParseACL with read and write access for the given user.
@@ -82,13 +77,117 @@ class ParseACL implements Encodable
     }
 
     /**
+     * Set whether the given user is allowed to read this object.
+     *
+     * @param ParseUser $user
+     * @param bool $allowed
+     *
+     * @throws Exception
+     */
+    public function setUserReadAccess($user, $allowed)
+    {
+        if (!$user->getObjectId()) {
+            throw new Exception('cannot setReadAccess for a user with null id', 104);
+        }
+        $this->setReadAccess($user->getObjectId(), $allowed);
+    }
+
+    /**
+     * Set whether the given user id is allowed to read this object.
+     *
+     * @param string $userId User id.
+     * @param bool $allowed If user allowed to read or not.
+     *
+     * @throws Exception
+     */
+    public function setReadAccess($userId, $allowed)
+    {
+        if (!$userId) {
+            throw new Exception('cannot setReadAccess for null userId', 104);
+        }
+        $this->setAccess('read', $userId, $allowed);
+    }
+
+    /**
+     * Set access permission with access name, user id and if
+     * the user has permission for accessing or not.
+     *
+     * @param string $accessType Access name.
+     * @param string $userId User id.
+     * @param bool $allowed If user allowed to access or not.
+     *
+     * @throws ParseException
+     */
+    private function setAccess($accessType, $userId, $allowed)
+    {
+        if ($userId instanceof ParseUser) {
+            $userId = $userId->getObjectId();
+        }
+        if ($userId instanceof ParseRole) {
+            $userId = 'role:' . $userId->getName();
+        }
+        if (!is_string($userId)) {
+            throw new ParseException(
+                'Invalid target for access control.',
+                104
+            );
+        }
+        if (!isset($this->permissionsById[$userId])) {
+            if (!$allowed) {
+                return;
+            }
+            $this->permissionsById[$userId] = [];
+        }
+        if ($allowed) {
+            $this->permissionsById[$userId][$accessType] = true;
+        } else {
+            unset($this->permissionsById[$userId][$accessType]);
+            if (empty($this->permissionsById[$userId])) {
+                unset($this->permissionsById[$userId]);
+            }
+        }
+    }
+
+    /**
+     * Set whether the given user is allowed to write this object.
+     *
+     * @param ParseUser $user
+     * @param bool $allowed
+     *
+     * @throws Exception
+     */
+    public function setUserWriteAccess($user, $allowed)
+    {
+        if (!$user->getObjectId()) {
+            throw new Exception('cannot setWriteAccess for a user with null id', 104);
+        }
+        $this->setWriteAccess($user->getObjectId(), $allowed);
+    }
+
+    /**
+     * Set whether the given user id is allowed to write this object.
+     *
+     * @param string $userId User id.
+     * @param bool $allowed If user allowed to write or not.
+     *
+     * @throws Exception
+     */
+    public function setWriteAccess($userId, $allowed)
+    {
+        if (!$userId) {
+            throw new Exception('cannot setWriteAccess for null userId', 104);
+        }
+        $this->setAccess('write', $userId, $allowed);
+    }
+
+    /**
      * Create new ParseACL from existing permissions.
      *
      * @param array $data represents permissions.
      *
-     * @throws \Exception
-     *
      * @return ParseACL
+     * @throws Exception
+     *
      */
     public static function _createACLFromJSON($data)
     {
@@ -113,6 +212,62 @@ class ParseACL implements Encodable
         }
 
         return $acl;
+    }
+
+    /**
+     * Get the defaultACL.
+     *
+     * @return ParseACL
+     */
+    public static function _getDefaultACL()
+    {
+        if (self::$defaultACLUsesCurrentUser && self::$defaultACL) {
+            $last = self::$lastCurrentUser ? clone self::$lastCurrentUser : null;
+            if (!ParseUser::getCurrentUser()) {
+                return self::$defaultACL;
+            }
+            if ($last !== ParseUser::getCurrentUser()) {
+                self::$defaultACLWithCurrentUser = clone self::$defaultACL;
+                self::$defaultACLWithCurrentUser->_setShared(true);
+                self::$defaultACLWithCurrentUser->setUserReadAccess(ParseUser::getCurrentUser(), true);
+                self::$defaultACLWithCurrentUser->setUserWriteAccess(ParseUser::getCurrentUser(), true);
+                self::$lastCurrentUser = clone ParseUser::getCurrentUser();
+            }
+
+            return self::$defaultACLWithCurrentUser;
+        }
+
+        return self::$defaultACL;
+    }
+
+    /**
+     * Sets a default ACL that will be applied to all ParseObjects when they
+     * are created.
+     *
+     * @param ParseACL $acl The ACL to use as a template for all ParseObjects
+     *                                           created after setDefaultACL has been called. This
+     *                                           value will be copied and used as a template for the
+     *                                           creation of new ACLs, so changes to the instance
+     *                                           after setDefaultACL() has been called will not be
+     *                                           reflected in new ParseObjects.
+     * @param bool $withAccessForCurrentUser If true, the ParseACL that is applied to
+     *                                           newly-created ParseObjects will provide read
+     *                                           and write access to the ParseUser#getCurrentUser()
+     *                                           at the time of creation. If false, the provided
+     *                                           ACL will be used without modification. If acl is
+     *                                           null, this value is ignored.
+     */
+    public static function setDefaultACL($acl, $withAccessForCurrentUser)
+    {
+        self::$defaultACLWithCurrentUser = null;
+        self::$lastCurrentUser = null;
+        if ($acl) {
+            self::$defaultACL = clone $acl;
+            self::$defaultACL->_setShared(true);
+            self::$defaultACLUsesCurrentUser = $withAccessForCurrentUser;
+        } else {
+            self::$defaultACL = null;
+        }
     }
 
     /**
@@ -143,144 +298,10 @@ class ParseACL implements Encodable
     public function _encode()
     {
         if (empty($this->permissionsById)) {
-            return new \stdClass();
+            return new stdClass();
         }
 
         return $this->permissionsById;
-    }
-
-    /**
-     * Set access permission with access name, user id and if
-     * the user has permission for accessing or not.
-     *
-     * @param string $accessType Access name.
-     * @param string $userId     User id.
-     * @param bool   $allowed    If user allowed to access or not.
-     *
-     * @throws ParseException
-     */
-    private function setAccess($accessType, $userId, $allowed)
-    {
-        if ($userId instanceof ParseUser) {
-            $userId = $userId->getObjectId();
-        }
-        if ($userId instanceof ParseRole) {
-            $userId = 'role:'.$userId->getName();
-        }
-        if (!is_string($userId)) {
-            throw new ParseException(
-                'Invalid target for access control.',
-                104
-            );
-        }
-        if (!isset($this->permissionsById[$userId])) {
-            if (!$allowed) {
-                return;
-            }
-            $this->permissionsById[$userId] = [];
-        }
-        if ($allowed) {
-            $this->permissionsById[$userId][$accessType] = true;
-        } else {
-            unset($this->permissionsById[$userId][$accessType]);
-            if (empty($this->permissionsById[$userId])) {
-                unset($this->permissionsById[$userId]);
-            }
-        }
-    }
-
-    /**
-     * Get if the given userId has a permission for the given access type or not.
-     *
-     * @param string $accessType Access name.
-     * @param string $userId     User id.
-     *
-     * @return bool
-     */
-    private function getAccess($accessType, $userId)
-    {
-        if (!isset($this->permissionsById[$userId])) {
-            return false;
-        }
-        if (!isset($this->permissionsById[$userId][$accessType])) {
-            return false;
-        }
-
-        return $this->permissionsById[$userId][$accessType];
-    }
-
-    /**
-     * Set whether the given user id is allowed to read this object.
-     *
-     * @param string $userId  User id.
-     * @param bool   $allowed If user allowed to read or not.
-     *
-     * @throws \Exception
-     */
-    public function setReadAccess($userId, $allowed)
-    {
-        if (!$userId) {
-            throw new Exception('cannot setReadAccess for null userId', 104);
-        }
-        $this->setAccess('read', $userId, $allowed);
-    }
-
-    /**
-     * Get whether the given user id is *explicitly* allowed to read this
-     * object. Even if this returns false, the user may still be able to
-     * access it if getPublicReadAccess returns true or a role that the
-     * user belongs to has read access.
-     *
-     * @param string $userId User id.
-     *
-     * @throws \Exception
-     *
-     * @return bool
-     */
-    public function getReadAccess($userId)
-    {
-        if (!$userId) {
-            throw new Exception('cannot getReadAccess for null userId', 104);
-        }
-
-        return $this->getAccess('read', $userId);
-    }
-
-    /**
-     * Set whether the given user id is allowed to write this object.
-     *
-     * @param string $userId  User id.
-     * @param bool   $allowed If user allowed to write or not.
-     *
-     * @throws \Exception
-     */
-    public function setWriteAccess($userId, $allowed)
-    {
-        if (!$userId) {
-            throw new Exception('cannot setWriteAccess for null userId', 104);
-        }
-        $this->setAccess('write', $userId, $allowed);
-    }
-
-    /**
-     * Get whether the given user id is *explicitly* allowed to write this
-     * object. Even if this returns false, the user may still be able to
-     * access it if getPublicWriteAccess returns true or a role that the
-     * user belongs to has write access.
-     *
-     * @param string $userId User id.
-     *
-     * @throws \Exception
-     *
-     * @return bool
-     */
-    public function getWriteAccess($userId)
-    {
-        if (!$userId) {
-            throw new Exception('cannot getWriteAccess for null userId', 104);
-        }
-
-        return $this->getAccess('write', $userId);
     }
 
     /**
@@ -304,6 +325,47 @@ class ParseACL implements Encodable
     }
 
     /**
+     * Get whether the given user id is *explicitly* allowed to read this
+     * object. Even if this returns false, the user may still be able to
+     * access it if getPublicReadAccess returns true or a role that the
+     * user belongs to has read access.
+     *
+     * @param string $userId User id.
+     *
+     * @return bool
+     * @throws Exception
+     *
+     */
+    public function getReadAccess($userId)
+    {
+        if (!$userId) {
+            throw new Exception('cannot getReadAccess for null userId', 104);
+        }
+
+        return $this->getAccess('read', $userId);
+    }
+
+    /**
+     * Get if the given userId has a permission for the given access type or not.
+     *
+     * @param string $accessType Access name.
+     * @param string $userId User id.
+     *
+     * @return bool
+     */
+    private function getAccess($accessType, $userId)
+    {
+        if (!isset($this->permissionsById[$userId])) {
+            return false;
+        }
+        if (!isset($this->permissionsById[$userId][$accessType])) {
+            return false;
+        }
+
+        return $this->permissionsById[$userId][$accessType];
+    }
+
+    /**
      * Set whether the public is allowed to write this object.
      *
      * @param bool $allowed
@@ -324,19 +386,24 @@ class ParseACL implements Encodable
     }
 
     /**
-     * Set whether the given user is allowed to read this object.
+     * Get whether the given user id is *explicitly* allowed to write this
+     * object. Even if this returns false, the user may still be able to
+     * access it if getPublicWriteAccess returns true or a role that the
+     * user belongs to has write access.
      *
-     * @param ParseUser $user
-     * @param bool      $allowed
+     * @param string $userId User id.
      *
-     * @throws \Exception
+     * @return bool
+     * @throws Exception
+     *
      */
-    public function setUserReadAccess($user, $allowed)
+    public function getWriteAccess($userId)
     {
-        if (!$user->getObjectId()) {
-            throw new Exception('cannot setReadAccess for a user with null id', 104);
+        if (!$userId) {
+            throw new Exception('cannot getWriteAccess for null userId', 104);
         }
-        $this->setReadAccess($user->getObjectId(), $allowed);
+
+        return $this->getAccess('write', $userId);
     }
 
     /**
@@ -347,9 +414,9 @@ class ParseACL implements Encodable
      *
      * @param ParseUser $user
      *
-     * @throws \Exception
-     *
      * @return bool
+     * @throws Exception
+     *
      */
     public function getUserReadAccess($user)
     {
@@ -361,22 +428,6 @@ class ParseACL implements Encodable
     }
 
     /**
-     * Set whether the given user is allowed to write this object.
-     *
-     * @param ParseUser $user
-     * @param bool      $allowed
-     *
-     * @throws \Exception
-     */
-    public function setUserWriteAccess($user, $allowed)
-    {
-        if (!$user->getObjectId()) {
-            throw new Exception('cannot setWriteAccess for a user with null id', 104);
-        }
-        $this->setWriteAccess($user->getObjectId(), $allowed);
-    }
-
-    /**
      * Get whether the given user is *explicitly* allowed to write this object.
      * Even if this returns false, the user may still be able to access it if
      * getPublicWriteAccess returns true or a role that the user belongs to has
@@ -384,9 +435,9 @@ class ParseACL implements Encodable
      *
      * @param ParseUser $user
      *
-     * @throws \Exception
-     *
      * @return bool
+     * @throws Exception
+     *
      */
     public function getUserWriteAccess($user)
     {
@@ -395,75 +446,6 @@ class ParseACL implements Encodable
         }
 
         return $this->getWriteAccess($user->getObjectId());
-    }
-
-    /**
-     * Get whether users belonging to the role with the given roleName are
-     * allowed to read this object. Even if this returns false, the role may
-     * still be able to read it if a parent role has read access.
-     *
-     * @param string $roleName The name of the role.
-     *
-     * @return bool
-     */
-    public function getRoleReadAccessWithName($roleName)
-    {
-        return $this->getReadAccess('role:'.$roleName);
-    }
-
-    /**
-     * Set whether users belonging to the role with the given roleName
-     * are allowed to read this object.
-     *
-     * @param string $roleName The name of the role.
-     * @param bool   $allowed  Whether the given role can read this object.
-     */
-    public function setRoleReadAccessWithName($roleName, $allowed)
-    {
-        $this->setReadAccess('role:'.$roleName, $allowed);
-    }
-
-    /**
-     * Get whether users belonging to the role with the given roleName are
-     * allowed to write this object. Even if this returns false, the role may
-     * still be able to write it if a parent role has write access.
-     *
-     * @param string $roleName The name of the role.
-     *
-     * @return bool
-     */
-    public function getRoleWriteAccessWithName($roleName)
-    {
-        return $this->getWriteAccess('role:'.$roleName);
-    }
-
-    /**
-     * Set whether users belonging to the role with the given roleName
-     * are allowed to write this object.
-     *
-     * @param string $roleName The name of the role.
-     * @param bool   $allowed  Whether the given role can write this object.
-     */
-    public function setRoleWriteAccessWithName($roleName, $allowed)
-    {
-        $this->setWriteAccess('role:'.$roleName, $allowed);
-    }
-
-    /**
-     * Check whether the role is valid or not.
-     *
-     * @param ParseRole $role
-     *
-     * @throws \Exception
-     */
-    private static function validateRoleState($role)
-    {
-        if (!$role->getObjectId()) {
-            throw new Exception(
-                'Roles must be saved to the server before they can be used in an ACL.',
-                104
-            );
-        }
     }
 
     /**
@@ -484,17 +466,60 @@ class ParseACL implements Encodable
     }
 
     /**
+     * Check whether the role is valid or not.
+     *
+     * @param ParseRole $role
+     *
+     * @throws Exception
+     */
+    private static function validateRoleState($role)
+    {
+        if (!$role->getObjectId()) {
+            throw new Exception(
+                'Roles must be saved to the server before they can be used in an ACL.',
+                104
+            );
+        }
+    }
+
+    /**
+     * Get whether users belonging to the role with the given roleName are
+     * allowed to read this object. Even if this returns false, the role may
+     * still be able to read it if a parent role has read access.
+     *
+     * @param string $roleName The name of the role.
+     *
+     * @return bool
+     */
+    public function getRoleReadAccessWithName($roleName)
+    {
+        return $this->getReadAccess('role:' . $roleName);
+    }
+
+    /**
      * Set whether users belonging to the given role are allowed to read this
      * object. The role must already be saved on the server and its data must
      * have been fetched in order to use this method.
      *
-     * @param ParseRole $role    The role to assign access.
-     * @param bool      $allowed Whether the given role can read this object.
+     * @param ParseRole $role The role to assign access.
+     * @param bool $allowed Whether the given role can read this object.
      */
     public function setRoleReadAccess($role, $allowed)
     {
         $this->validateRoleState($role);
         $this->setRoleReadAccessWithName($role->getName(), $allowed);
+    }
+
+    /**
+     * Set whether users belonging to the role with the given roleName
+     * are allowed to read this object.
+     *
+     * @param string $roleName The name of the role.
+     * @param bool $allowed Whether the given role can read this object.
+     */
+    public function setRoleReadAccessWithName($roleName, $allowed)
+    {
+        $this->setReadAccess('role:' . $roleName, $allowed);
     }
 
     /**
@@ -515,12 +540,26 @@ class ParseACL implements Encodable
     }
 
     /**
+     * Get whether users belonging to the role with the given roleName are
+     * allowed to write this object. Even if this returns false, the role may
+     * still be able to write it if a parent role has write access.
+     *
+     * @param string $roleName The name of the role.
+     *
+     * @return bool
+     */
+    public function getRoleWriteAccessWithName($roleName)
+    {
+        return $this->getWriteAccess('role:' . $roleName);
+    }
+
+    /**
      * Set whether users belonging to the given role are allowed to write this
      * object. The role must already be saved on the server and its data must
      * have been fetched in order to use this method.
      *
-     * @param ParseRole $role    The role to assign access.
-     * @param bool      $allowed Whether the given role can read this object.
+     * @param ParseRole $role The role to assign access.
+     * @param bool $allowed Whether the given role can read this object.
      */
     public function setRoleWriteAccess($role, $allowed)
     {
@@ -529,58 +568,14 @@ class ParseACL implements Encodable
     }
 
     /**
-     * Sets a default ACL that will be applied to all ParseObjects when they
-     * are created.
+     * Set whether users belonging to the role with the given roleName
+     * are allowed to write this object.
      *
-     * @param ParseACL $acl                      The ACL to use as a template for all ParseObjects
-     *                                           created after setDefaultACL has been called. This
-     *                                           value will be copied and used as a template for the
-     *                                           creation of new ACLs, so changes to the instance
-     *                                           after setDefaultACL() has been called will not be
-     *                                           reflected in new ParseObjects.
-     * @param bool     $withAccessForCurrentUser If true, the ParseACL that is applied to
-     *                                           newly-created ParseObjects will provide read
-     *                                           and write access to the ParseUser#getCurrentUser()
-     *                                           at the time of creation. If false, the provided
-     *                                           ACL will be used without modification. If acl is
-     *                                           null, this value is ignored.
+     * @param string $roleName The name of the role.
+     * @param bool $allowed Whether the given role can write this object.
      */
-    public static function setDefaultACL($acl, $withAccessForCurrentUser)
+    public function setRoleWriteAccessWithName($roleName, $allowed)
     {
-        self::$defaultACLWithCurrentUser = null;
-        self::$lastCurrentUser = null;
-        if ($acl) {
-            self::$defaultACL = clone $acl;
-            self::$defaultACL->_setShared(true);
-            self::$defaultACLUsesCurrentUser = $withAccessForCurrentUser;
-        } else {
-            self::$defaultACL = null;
-        }
-    }
-
-    /**
-     * Get the defaultACL.
-     *
-     * @return ParseACL
-     */
-    public static function _getDefaultACL()
-    {
-        if (self::$defaultACLUsesCurrentUser && self::$defaultACL) {
-            $last = self::$lastCurrentUser ? clone self::$lastCurrentUser : null;
-            if (!ParseUser::getCurrentUser()) {
-                return self::$defaultACL;
-            }
-            if ($last !== ParseUser::getCurrentUser()) {
-                self::$defaultACLWithCurrentUser = clone self::$defaultACL;
-                self::$defaultACLWithCurrentUser->_setShared(true);
-                self::$defaultACLWithCurrentUser->setUserReadAccess(ParseUser::getCurrentUser(), true);
-                self::$defaultACLWithCurrentUser->setUserWriteAccess(ParseUser::getCurrentUser(), true);
-                self::$lastCurrentUser = clone ParseUser::getCurrentUser();
-            }
-
-            return self::$defaultACLWithCurrentUser;
-        }
-
-        return self::$defaultACL;
+        $this->setWriteAccess('role:' . $roleName, $allowed);
     }
 }

@@ -41,9 +41,9 @@ class ParseRelation implements Encodable
     /**
      * Creates a new Relation for the given parent object, key and class name of target objects.
      *
-     * @param ParseObject $parent          The parent of this relation.
-     * @param string      $key             The key of the relation in the parent object.
-     * @param string      $targetClassName The className of the target objects.
+     * @param ParseObject $parent The parent of this relation.
+     * @param string $key The key of the relation in the parent object.
+     * @param string $targetClassName The className of the target objects.
      */
     public function __construct($parent, $key, $targetClassName = null)
     {
@@ -134,7 +134,7 @@ class ParseRelation implements Encodable
     public function _encode()
     {
         return [
-            '__type'    => 'Relation',
+            '__type' => 'Relation',
             'className' => $this->targetClassName
         ];
     }

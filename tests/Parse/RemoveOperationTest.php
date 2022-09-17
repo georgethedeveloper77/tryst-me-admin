@@ -9,7 +9,6 @@ use Parse\Internal\AddOperation;
 use Parse\Internal\DeleteOperation;
 use Parse\Internal\RemoveOperation;
 use Parse\Internal\SetOperation;
-
 use PHPUnit\Framework\TestCase;
 
 class RemoveOperationTest extends TestCase
@@ -32,7 +31,7 @@ class RemoveOperationTest extends TestCase
     public function testMergePrevious()
     {
         $removeOp = new RemoveOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
 
         $this->assertEquals($removeOp, $removeOp->_mergeWithPrevious(null));
@@ -49,11 +48,11 @@ class RemoveOperationTest extends TestCase
         ], $merged->getValue(), 'Value was not as expected');
 
         // check self
-        $merged = $removeOp->_mergeWithPrevious(new RemoveOperation(['key2'   => 'value2']));
+        $merged = $removeOp->_mergeWithPrevious(new RemoveOperation(['key2' => 'value2']));
         $this->assertTrue($merged instanceof RemoveOperation);
         $this->assertEquals([
-            'key2'  => 'value2',
-            'key1'  => 'value1'
+            'key2' => 'value2',
+            'key1' => 'value1'
         ], $merged->getValue(), 'Value was not as expected');
     }
 
@@ -67,9 +66,9 @@ class RemoveOperationTest extends TestCase
             'Operation is invalid after previous operation.'
         );
         $removeOp = new RemoveOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
-        $removeOp->_mergeWithPrevious(new AddOperation(['key'=>'value']));
+        $removeOp->_mergeWithPrevious(new AddOperation(['key' => 'value']));
     }
 
     /**
@@ -78,7 +77,7 @@ class RemoveOperationTest extends TestCase
     public function testEmptyApply()
     {
         $removeOp = new RemoveOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
         $this->assertEmpty($removeOp->_apply([], null, null));
     }

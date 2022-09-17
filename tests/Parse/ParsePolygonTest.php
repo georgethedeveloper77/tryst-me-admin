@@ -3,33 +3,32 @@
 namespace Parse\Test;
 
 use Parse\ParseGeoPoint;
-use Parse\ParsePolygon;
 use Parse\ParseObject;
+use Parse\ParsePolygon;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class ParsePolygonTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('TestObject');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
     }
 
     public function testPolygonWithPoints()
     {
-        $openPoints = [[0,0],[0,1],[1,1],[1,0]];
-        $closedPoints = [[0,0],[0,1],[1,1],[1,0],[0,0]];
+        $openPoints = [[0, 0], [0, 1], [1, 1], [1, 0]];
+        $closedPoints = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
         $polygon = new ParsePolygon($openPoints);
 
         $obj = ParseObject::create('TestObject');
@@ -66,7 +65,7 @@ class ParsePolygonTest extends TestCase
         $p4 = new ParseGeoPoint(1, 0);
 
         $points = [$p1, $p2, $p3, $p4];
-        $closedPoints = [[0,0],[0,1],[1,1],[1,0],[0,0]];
+        $closedPoints = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
         $polygon = new ParsePolygon($points);
 
         $obj = ParseObject::create('TestObject');
@@ -101,7 +100,7 @@ class ParsePolygonTest extends TestCase
             '\Parse\ParseException',
             'Polygon must have at least 3 GeoPoints or Points'
         );
-        $polygon = new ParsePolygon([[0,0]]);
+        $polygon = new ParsePolygon([[0, 0]]);
         $obj = ParseObject::create('TestObject');
         $obj->set('polygon', $polygon);
         $obj->save();
@@ -125,7 +124,7 @@ class ParsePolygonTest extends TestCase
             '\Parse\ParseException',
             'Coordinates must be an Array of GeoPoints or Points'
         );
-        $polygon = new ParsePolygon([['str1'],['str2'],['str3']]);
+        $polygon = new ParsePolygon([['str1'], ['str2'], ['str3']]);
         $obj = ParseObject::create('TestObject');
         $obj->set('polygon', $polygon);
         $obj->save();
@@ -133,9 +132,9 @@ class ParsePolygonTest extends TestCase
 
     public function testPolygonContains()
     {
-        $points1 = [[0,0],[0,1],[1,1],[1,0]];
-        $points2 = [[0,0],[0,2],[2,2],[2,0]];
-        $points3 = [[10,10],[10,15],[15,15],[15,10],[10,10]];
+        $points1 = [[0, 0], [0, 1], [1, 1], [1, 0]];
+        $points2 = [[0, 0], [0, 2], [2, 2], [2, 0]];
+        $points3 = [[10, 10], [10, 15], [15, 15], [15, 10], [10, 10]];
 
         $polygon1 = new ParsePolygon($points1);
         $polygon2 = new ParsePolygon($points2);
@@ -164,7 +163,7 @@ class ParsePolygonTest extends TestCase
             '\Parse\ParseException',
             'bad $geoIntersect value; $point should be GeoPoint'
         );
-        $points = [[0,0],[0,1],[1,1],[1,0]];
+        $points = [[0, 0], [0, 1], [1, 1], [1, 0]];
         $polygon = new ParsePolygon($points);
         $obj = ParseObject::create('TestObject');
         $obj->set('polygon', $polygon);

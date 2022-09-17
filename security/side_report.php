@@ -1,22 +1,20 @@
 <?php
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
 use Parse\ParseException;
 use Parse\ParseQuery;
 use Parse\ParseUser;
 
-
 //session_start();
 
 $currUser = ParseUser::getCurrentUser();
-if ($currUser){
-
+if ($currUser) {
     // Store current user session token, to restore in case we create new user
-    $_SESSION['token'] = $currUser -> getSessionToken();
+    $_SESSION['token'] = $currUser->getSessionToken();
 } else {
-
     header("Refresh:0; url=../index.php");
 }
 
@@ -26,7 +24,7 @@ if ($currUser){
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Reports</h3> </div>
+            <h3 class="text-primary">Reports</h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Security</a></li>
@@ -50,7 +48,7 @@ if ($currUser){
                     $query = new ParseQuery('Report');
                     $matchCounter = $query->count(true);
 
-                    echo ' <h2 class="card-title">'.$matchCounter.' Reports in total</h2> ';
+                    echo ' <h2 class="card-title">' . $matchCounter . ' Reports in total</h2> ';
 
                     ?>
 
@@ -58,7 +56,8 @@ if ($currUser){
                     <div class="card-body">
                         <div class="table-responsive">
                             <!--<table class="table">-->
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                                   cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
                                     <th>ObjectId</th>
@@ -75,7 +74,6 @@ if ($currUser){
 
                                 <?php
                                 try {
-
                                     $currUser = ParseUser::getCurrentUser();
                                     $cuObjectID = $currUser->getObjectId();
 
@@ -92,27 +90,23 @@ if ($currUser){
                                         $cObj = $iValue;
 
                                         $objectId = $cObj->getObjectId();
-                                        $date= $cObj->getCreatedAt();
-                                        $created = date_format($date,"d/m/Y");
+                                        $date = $cObj->getCreatedAt();
+                                        $created = date_format($date, "d/m/Y");
 
                                         $fromName = $cObj->get('accuser')->get('name');
                                         $toName = $cObj->get('accused')->get('name');
                                         $type = $cObj->get('reportType');
 
-                                        if ($type === "LIVE"){
+                                        if ($type === "LIVE") {
                                             $objectIdStream = $cObj->get('live')->getObjectId();
                                             $object = "<span/><a target='_blank' href=\"../dashboard/edit_report_object.php?objectId=$objectId\" class=\"badge badge-info\">Review</a></span>";
-
-                                        } else  if ($type === "POST"){
-
-                                            if ($cObj->get('post') != null){
+                                        } elseif ($type === "POST") {
+                                            if ($cObj->get('post') != null) {
                                                 $objectIdStream = $cObj->get('post')->getObjectId();
                                                 $object = "<span/><a target='_blank' href=\"../dashboard/edit_report_object.php?objectId=$objectId\" class=\"badge badge-info\">Review</a></span>";
-
                                             } else {
                                                 $object = "<span class=\"badge badge-red\">Deleted</span>";
                                             }
-
                                         } else {
                                             $objectIdStream = $cObj->get('accused')->getObjectId();
                                             $object = "<span/><a target='_blank' href=\"../dashboard/edit_user.php?objectId=$objectIdStream\" class=\"badge badge-info\">Review</a></span>";
@@ -122,15 +116,14 @@ if ($currUser){
                                         $state = $cObj->get('state');
 
 
-                                        if ($state == "resolved"){
+                                        if ($state == "resolved") {
                                             $state = "<span class=\"badge badge-success\">Resolved</span>";
-
-                                        } else  if ($type === "POST"){
-                                             if ($cObj->get('post') != null){
-                                                 $state = "<span class=\"badge badge-danger\">Pending</span>";
-                                             } else {
-                                                 $state = "<span class=\"badge badge-success\">Resolved</span>";
-                                             }
+                                        } elseif ($type === "POST") {
+                                            if ($cObj->get('post') != null) {
+                                                $state = "<span class=\"badge badge-danger\">Pending</span>";
+                                            } else {
+                                                $state = "<span class=\"badge badge-success\">Resolved</span>";
+                                            }
                                         } else {
                                             $state = "<span class=\"badge badge-danger\">Pending</span>";
                                         }
@@ -138,27 +131,28 @@ if ($currUser){
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td>'.$created.'</td>
-                                    <td>'.$fromName.'</td>
-                                    <td>'.$toName.'</td>
-                                    <td>'.$type.'</td>
-                                    <td>'.$reason.'</td>
-                                    <td>'.$state.'</td>
-                                    <td>'.$object.'</td>
+                                    <td>' . $objectId . '</td>
+                                    <td>' . $created . '</td>
+                                    <td>' . $fromName . '</td>
+                                    <td>' . $toName . '</td>
+                                    <td>' . $type . '</td>
+                                    <td>' . $reason . '</td>
+                                    <td>' . $state . '</td>
+                                    <td>' . $object . '</td>
                                 </tr>
                                 
                                 ';
                                     }
                                     // error in query
-                                } catch (ParseException $e){ echo $e->getMessage(); }
+                                } catch (ParseException $e) {
+                                    echo $e->getMessage();
+                                }
                                 ?>
 
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
 
 
                 </div>

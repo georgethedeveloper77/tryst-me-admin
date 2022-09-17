@@ -28,16 +28,6 @@ class ParseSession extends ParseObject
     private $_sessionToken = null;
 
     /**
-     * Returns the session token string.
-     *
-     * @return string
-     */
-    public function getSessionToken()
-    {
-        return $this->_sessionToken;
-    }
-
-    /**
      * Retrieves the Session object for the currently logged in user.
      *
      * @param bool $useMasterKey If the Master Key should be used to override security.
@@ -59,6 +49,28 @@ class ParseSession extends ParseObject
         $session->handleSaveResult();
 
         return $session;
+    }
+
+    /**
+     * Returns the session token string.
+     *
+     * @return string
+     */
+    public function getSessionToken()
+    {
+        return $this->_sessionToken;
+    }
+
+    /**
+     * After a save, perform Session object specific logic.
+     */
+    private function handleSaveResult()
+    {
+        if (isset($this->serverData['sessionToken'])) {
+            $this->_sessionToken = $this->serverData['sessionToken'];
+            unset($this->serverData['sessionToken']);
+        }
+        $this->rebuildEstimatedData();
     }
 
     /**
@@ -110,17 +122,5 @@ class ParseSession extends ParseObject
         } else {
             throw new ParseException('No session to upgrade.');
         }
-    }
-
-    /**
-     * After a save, perform Session object specific logic.
-     */
-    private function handleSaveResult()
-    {
-        if (isset($this->serverData['sessionToken'])) {
-            $this->_sessionToken = $this->serverData['sessionToken'];
-            unset($this->serverData['sessionToken']);
-        }
-        $this->rebuildEstimatedData();
     }
 }

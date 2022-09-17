@@ -1,8 +1,9 @@
-(function(jsGrid, $, undefined) {
+(function (jsGrid, $, undefined) {
 
     var TextField = jsGrid.TextField;
 
-    function NumberField(config) {
+    function NumberField(config)
+    {
         TextField.call(this, config);
     }
 
@@ -10,28 +11,28 @@
 
         sorter: "number",
         align: "right",
-		readOnly: false,
+        readOnly: false,
 
-        filterValue: function() {
+        filterValue: function () {
             return this.filterControl.val()
                 ? parseInt(this.filterControl.val() || 0, 10)
                 : undefined;
         },
 
-        insertValue: function() {
+        insertValue: function () {
             return this.insertControl.val()
                 ? parseInt(this.insertControl.val() || 0, 10)
                 : undefined;
         },
 
-        editValue: function() {
+        editValue: function () {
             return this.editControl.val()
                 ? parseInt(this.editControl.val() || 0, 10)
                 : undefined;
         },
 
-        _createTextBox: function() {
-			return $("<input>").attr("type", "number")
+        _createTextBox: function () {
+            return $("<input>").attr("type", "number")
                 .prop("readonly", !!this.readOnly);
         }
     });

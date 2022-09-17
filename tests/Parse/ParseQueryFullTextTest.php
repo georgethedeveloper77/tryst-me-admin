@@ -4,24 +4,36 @@ namespace Parse\Test;
 
 use Parse\ParseObject;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseQueryFullTextTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('TestObject');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
+    }
+
+    public function testFullTextQuery()
+    {
+        $this->provideTestObjects();
+        $query = new ParseQuery('TestObject');
+        $query->fullText('subject', 'coffee');
+        $results = $query->find();
+        $this->assertEquals(
+            3,
+            count($results),
+            'Did not return correct objects.'
+        );
     }
 
     /**
@@ -47,19 +59,6 @@ class ParseQueryFullTextTest extends TestCase
             $allObjects[] = $obj;
         }
         ParseObject::saveAll($allObjects);
-    }
-
-    public function testFullTextQuery()
-    {
-        $this->provideTestObjects();
-        $query = new ParseQuery('TestObject');
-        $query->fullText('subject', 'coffee');
-        $results = $query->find();
-        $this->assertEquals(
-            3,
-            count($results),
-            'Did not return correct objects.'
-        );
     }
 
     public function testFullTextSort()

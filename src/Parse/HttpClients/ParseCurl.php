@@ -50,8 +50,8 @@ class ParseCurl
     /**
      * Sets a curl option
      *
-     * @param int   $option Option to set
-     * @param mixed $value  Value to set for this option
+     * @param int $option Option to set
+     * @param mixed $value Value to set for this option
      * @throws ParseException
      */
     public function setOption($option, $value)
@@ -66,7 +66,7 @@ class ParseCurl
     /**
      * Sets multiple curl options
      *
-     * @param array $options    Array of options to set
+     * @param array $options Array of options to set
      * @throws ParseException
      */
     public function setOptionsArray($options)

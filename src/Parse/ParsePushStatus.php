@@ -5,6 +5,8 @@
 
 namespace Parse;
 
+use DateTime;
+
 /**
  * Class ParsePushStatus - Representation of PushStatus for push notifications
  *
@@ -13,19 +15,19 @@ namespace Parse;
  */
 class ParsePushStatus extends ParseObject
 {
+    const STATUS_SCHEDULED = 'scheduled';
+
+    // possible push status values from parse server
+    const STATUS_PENDING = 'pending';
+    const STATUS_RUNNING = 'running';
+    const STATUS_SUCCEEDED = 'succeeded';
+    const STATUS_FAILED = 'failed';
     /**
      * Parse Class name
      *
      * @var string
      */
     public static $parseClassName = '_PushStatus';
-
-    // possible push status values from parse server
-    const STATUS_SCHEDULED  = 'scheduled';
-    const STATUS_PENDING    = 'pending';
-    const STATUS_RUNNING    = 'running';
-    const STATUS_SUCCEEDED  = 'succeeded';
-    const STATUS_FAILED     = 'failed';
 
     /**
      * 'scheduled', 'pending', etc. Add constants and 'isPending' and such for better status checking
@@ -34,7 +36,7 @@ class ParsePushStatus extends ParseObject
     /**
      * Returns a push status object or null from an id
      *
-     * @param string $id    Id to get this push status by
+     * @param string $id Id to get this push status by
      * @return ParsePushStatus|null
      */
     public static function getFromId($id)
@@ -52,11 +54,11 @@ class ParsePushStatus extends ParseObject
     /**
      * Gets the time this push was sent at
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getPushTime()
     {
-        return new \DateTime($this->get("pushTime"));
+        return new DateTime($this->get("pushTime"));
     }
 
     /**
@@ -103,16 +105,6 @@ class ParsePushStatus extends ParseObject
     }
 
     /**
-     * Gets the status of this push
-     *
-     * @return string
-     */
-    public function getPushStatus()
-    {
-        return $this->get("status");
-    }
-
-    /**
      * Indicates whether this push is scheduled
      *
      * @return bool
@@ -120,6 +112,16 @@ class ParsePushStatus extends ParseObject
     public function isScheduled()
     {
         return $this->getPushStatus() === self::STATUS_SCHEDULED;
+    }
+
+    /**
+     * Gets the status of this push
+     *
+     * @return string
+     */
+    public function getPushStatus()
+    {
+        return $this->get("status");
     }
 
     /**

@@ -53,9 +53,10 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 ?>
 <!-- header -->
 
-<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Heyto Live Dashboard - Login</title>
-    
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TrystMe - Admin - Login</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
     <link rel="icon" type="image/png" href="../assets/dashboard/images/favicon.png"/>
@@ -130,9 +131,10 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 function showSweetAlert($title, $explain, $type)
 {
     echo '<script type="text/javascript">
-    setTimeout(function () { swal("'.$title.'","'.$explain.'","'.$type.'");
+    setTimeout(function () { swal("' . $title . '","' . $explain . '","' . $type . '");
     }, 1000);</script>';
 }
+
 ?>
 
 <!--===============================================================================================-->
@@ -144,7 +146,7 @@ function showSweetAlert($title, $explain, $type)
 <script src="../vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
 <script src="../vendor/tilt/tilt.jquery.min.js"></script>
-<script >
+<script>
     $('.js-tilt').tilt({
         scale: 1.1
     })

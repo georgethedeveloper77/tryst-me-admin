@@ -30,9 +30,19 @@ class ParseConfig
     }
 
     /**
+     * Sets the config
+     *
+     * @param array $config Config to set
+     */
+    protected function setConfig($config)
+    {
+        $this->currentConfig = $config;
+    }
+
+    /**
      * Gets a config value
      *
-     * @param string $key   Key of value to get
+     * @param string $key Key of value to get
      * @return mixed
      */
     public function get($key)
@@ -46,8 +56,8 @@ class ParseConfig
     /**
      * Sets a config value
      *
-     * @param string $key   Key to set value on
-     * @param mixed $value  Value to set
+     * @param string $key Key to set value on
+     * @param mixed $value Value to set
      */
     public function set($key, $value)
     {
@@ -57,7 +67,7 @@ class ParseConfig
     /**
      * Gets a config value with html characters encoded
      *
-     * @param string $key   Key of value to get
+     * @param string $key Key of value to get
      * @return string|null
      */
     public function escape($key)
@@ -66,16 +76,6 @@ class ParseConfig
             return htmlentities($this->currentConfig[$key]);
         }
         return null;
-    }
-
-    /**
-     * Sets the config
-     *
-     * @param array $config Config to set
-     */
-    protected function setConfig($config)
-    {
-        $this->currentConfig = $config;
     }
 
     /**
@@ -100,7 +100,7 @@ class ParseConfig
             'config',
             null,
             json_encode([
-                'params'    => $this->currentConfig
+                'params' => $this->currentConfig
             ]),
             true
         );

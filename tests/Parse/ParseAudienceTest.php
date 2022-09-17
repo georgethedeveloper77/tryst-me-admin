@@ -7,35 +7,14 @@ use Parse\ParseInstallation;
 use Parse\ParseObject;
 use Parse\ParsePush;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseAudienceTest extends TestCase
 {
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('_Audience');
         Helper::clearClass('_Installation');
-    }
-
-    public function createInstallations()
-    {
-        $androidInstallation = new ParseInstallation();
-        $androidInstallation->set('installationId', 'id1');
-        $androidInstallation->set('deviceToken', '12345');
-        $androidInstallation->set('deviceType', 'android');
-        $androidInstallation->save(true);
-
-        $iOSInstallation = new ParseInstallation();
-        $iOSInstallation->set('installationId', 'id2');
-        $iOSInstallation->set('deviceToken', '54321');
-        $iOSInstallation->set('deviceType', 'ios');
-        $iOSInstallation->save();
-
-        ParseObject::saveAll([
-            $androidInstallation,
-            $iOSInstallation
-        ]);
     }
 
     /**
@@ -63,6 +42,26 @@ class ParseAudienceTest extends TestCase
         $this->assertEquals($androidQuery, $audience->getQuery());
         $this->assertNull($audience->getLastUsed());
         $this->assertEquals(0, $audience->getTimesUsed());
+    }
+
+    public function createInstallations()
+    {
+        $androidInstallation = new ParseInstallation();
+        $androidInstallation->set('installationId', 'id1');
+        $androidInstallation->set('deviceToken', '12345');
+        $androidInstallation->set('deviceType', 'android');
+        $androidInstallation->save(true);
+
+        $iOSInstallation = new ParseInstallation();
+        $iOSInstallation->set('installationId', 'id2');
+        $iOSInstallation->set('deviceToken', '54321');
+        $iOSInstallation->set('deviceType', 'ios');
+        $iOSInstallation->save();
+
+        ParseObject::saveAll([
+            $androidInstallation,
+            $iOSInstallation
+        ]);
     }
 
     /**
@@ -99,11 +98,11 @@ class ParseAudienceTest extends TestCase
         $audience->save(true);
 
         ParsePush::send([
-            'data'          => [
+            'data' => [
                 'alert' => 'sample message'
             ],
-            'where'         => $audience->getQuery(),
-            'audience_id'   => $audience->getObjectId()
+            'where' => $audience->getQuery(),
+            'audience_id' => $audience->getObjectId()
         ], true);
 
         $audience->fetch(true);

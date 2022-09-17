@@ -16,9 +16,9 @@ class ParseHooks
     /**
      * Fetch the list of all cloud functions.
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function fetchFunctions()
     {
@@ -38,15 +38,15 @@ class ParseHooks
      *
      * @param string $functionName
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function fetchFunction($functionName)
     {
         $result = ParseClient::_request(
             'GET',
-            'hooks/functions/'.$functionName,
+            'hooks/functions/' . $functionName,
             null,
             null,
             true
@@ -58,9 +58,9 @@ class ParseHooks
     /**
      * Fetch the list of all cloud triggers.
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function fetchTriggers()
     {
@@ -81,15 +81,15 @@ class ParseHooks
      * @param string $className
      * @param string $triggerName
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function fetchTrigger($className, $triggerName)
     {
         $result = ParseClient::_request(
             'GET',
-            'hooks/triggers/'.$className.'/'.$triggerName,
+            'hooks/triggers/' . $className . '/' . $triggerName,
             null,
             null,
             true
@@ -104,9 +104,9 @@ class ParseHooks
      * @param string $functionName
      * @param string $url
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function createFunction($functionName, $url)
     {
@@ -116,7 +116,7 @@ class ParseHooks
             null,
             json_encode([
                 'functionName' => $functionName,
-                'url'          => $url,
+                'url' => $url,
             ]),
             true
         );
@@ -140,9 +140,9 @@ class ParseHooks
             'hooks/triggers',
             null,
             json_encode([
-                'className'   => $className,
+                'className' => $className,
                 'triggerName' => $triggerName,
-                'url'         => $url,
+                'url' => $url,
             ]),
             true
         );
@@ -156,15 +156,15 @@ class ParseHooks
      * @param string $functionName
      * @param string $url
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function editFunction($functionName, $url)
     {
         $result = ParseClient::_request(
             'PUT',
-            'hooks/functions/'.$functionName,
+            'hooks/functions/' . $functionName,
             null,
             json_encode([
                 'url' => $url,
@@ -188,7 +188,7 @@ class ParseHooks
     {
         $result = ParseClient::_request(
             'PUT',
-            'hooks/triggers/'.$className.'/'.$triggerName,
+            'hooks/triggers/' . $className . '/' . $triggerName,
             null,
             json_encode([
                 'url' => $url,
@@ -204,15 +204,15 @@ class ParseHooks
      *
      * @param string $functionName
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function deleteFunction($functionName)
     {
         $result = ParseClient::_request(
             'PUT',
-            'hooks/functions/'.$functionName,
+            'hooks/functions/' . $functionName,
             null,
             json_encode([
                 '__op' => 'Delete',
@@ -235,7 +235,7 @@ class ParseHooks
     {
         $result = ParseClient::_request(
             'PUT',
-            'hooks/triggers/'.$className.'/'.$triggerName,
+            'hooks/triggers/' . $className . '/' . $triggerName,
             null,
             json_encode([
                 '__op' => 'Delete',

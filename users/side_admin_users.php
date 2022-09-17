@@ -1,6 +1,7 @@
 <?php
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
 use Parse\ParseException;
@@ -11,10 +12,10 @@ use Parse\ParseUser;
 //session_start();
 
 $currUser = ParseUser::getCurrentUser();
-if ($currUser){
+if ($currUser) {
 
     // Store current user session token, to restore in case we create new user
-    $_SESSION['token'] = $currUser -> getSessionToken();
+    $_SESSION['token'] = $currUser->getSessionToken();
 } else {
 
     header("Refresh:0; url=../index.php");
@@ -26,11 +27,11 @@ if ($currUser){
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Admin Users </h3> </div>
+            <h3 class="text-primary">Admin Users </h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Users</a></li>
-                <li class="breadcrumb-item active">Admin Users </li>
+                <li class="breadcrumb-item active">Admin Users</li>
             </ol>
         </div>
     </div>
@@ -43,11 +44,12 @@ if ($currUser){
         </div>
         <div class="row">
             <div class="col-lg">
-               <div class="card">
+                <div class="card">
                     <h5 class="card-subtitle">Copy or Export CSV, Excel, PDF and Print data</h5>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                                   cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
                                     <th>ObjectId</th>
@@ -96,16 +98,16 @@ if ($currUser){
 
                                         $gender = $cObj->get('gender');
 
-                                        if ($gender === "male"){
+                                        if ($gender === "male") {
                                             $UserGender = "Male";
-                                        } else if ($gender === "female"){
+                                        } else if ($gender === "female") {
                                             $UserGender = "Female";
                                         } else {
                                             $UserGender = "Private";
                                         }
 
 
-                                        $birthday= $cObj->get('birthday');
+                                        $birthday = $cObj->get('birthday');
 
                                         if ($birthday != null) {
                                             $birthDate = date_format($birthday, "d/m/Y");
@@ -117,44 +119,45 @@ if ($currUser){
 
 
                                         $verified = $cObj->get('emailVerified');
-                                        if ($verified == false){
+                                        if ($verified == false) {
                                             $verification = "<span class=\"badge badge-warning\">UNVERIFIED</span>";
                                         } else {
                                             $verification = "<span class=\"badge badge-success\">VERIFED</span>";
                                         }
 
                                         $locaton = $cObj->get('location');
-                                        if ($locaton == null){
+                                        if ($locaton == null) {
                                             $city_location = "<span class=\"badge badge-warning\">Unavailable</span>";
-                                        } else{
+                                        } else {
                                             $city_location = "<span class=\"badge badge-info\">$locaton</span>";
                                         }
 
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td>'.$name.'</td>
-                                    <td>'.$username.'</td>
-                                    <td>'.$avatar.'</td>
-                                    <td><span>'.$UserGender.'</span></td>
-                                    <td><span>'.$birthDate.'</span></td>
-                                    <td>'.$age.'</td>
-                                    <td>'.$city_location.'</td>
-                                    <td>'.$verification.'</td>
+                                    <td>' . $objectId . '</td>
+                                    <td>' . $name . '</td>
+                                    <td>' . $username . '</td>
+                                    <td>' . $avatar . '</td>
+                                    <td><span>' . $UserGender . '</span></td>
+                                    <td><span>' . $birthDate . '</span></td>
+                                    <td>' . $age . '</td>
+                                    <td>' . $city_location . '</td>
+                                    <td>' . $verification . '</td>
                                 </tr>
                                 
                                 ';
                                     }
                                     // error in query
-                                } catch (ParseException $e){ echo $e->getMessage(); }
+                                } catch (ParseException $e) {
+                                    echo $e->getMessage();
+                                }
                                 ?>
 
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
 
 
                 </div>

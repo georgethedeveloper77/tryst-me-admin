@@ -15,12 +15,12 @@ use PHPUnit\Framework\TestCase;
 
 class AddUniqueOperationTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::clearClass('TestObject');
     }
@@ -31,8 +31,8 @@ class AddUniqueOperationTest extends TestCase
     public function testAddUniqueOp()
     {
         $objects = [
-            'key1'  => 'val1',
-            'key2'  => 'val2'
+            'key1' => 'val1',
+            'key2' => 'val2'
         ];
         $addUnique = new AddUniqueOperation($objects);
 
@@ -57,16 +57,16 @@ class AddUniqueOperationTest extends TestCase
     public function testEncode()
     {
         $objects = [
-            'key1'  => 'val1',
-            'key2'  => 'val2'
+            'key1' => 'val1',
+            'key2' => 'val2'
         ];
         $addUnique = new AddUniqueOperation($objects);
 
         $encoded = $addUnique->_encode();
 
         $this->assertEquals([
-            '__op'      => 'AddUnique',
-            'objects'   => ParseClient::_encode($objects, true)
+            '__op' => 'AddUnique',
+            'objects' => ParseClient::_encode($objects, true)
         ], $encoded);
     }
 
@@ -76,7 +76,7 @@ class AddUniqueOperationTest extends TestCase
     public function testMergePrevious()
     {
         $addOp = new AddUniqueOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
 
         $this->assertEquals($addOp, $addOp->_mergeWithPrevious(null));
@@ -94,10 +94,10 @@ class AddUniqueOperationTest extends TestCase
         ], $merged->getValue(), 'Value was not as expected');
 
         // check self
-        $merged = $addOp->_mergeWithPrevious(new AddUniqueOperation(['key2'   => 'value2']));
+        $merged = $addOp->_mergeWithPrevious(new AddUniqueOperation(['key2' => 'value2']));
         $this->assertTrue($merged instanceof AddUniqueOperation);
         $this->assertEquals([
-            'key2'  => 'value2',
+            'key2' => 'value2',
             'value1'
         ], $merged->getValue(), 'Value was not as expected');
     }
@@ -112,7 +112,7 @@ class AddUniqueOperationTest extends TestCase
             'Operation is invalid after previous operation.'
         );
         $addOp = new AddUniqueOperation([
-            'key1'          => 'value1'
+            'key1' => 'value1'
         ]);
         $addOp->_mergeWithPrevious(new IncrementOperation());
     }
@@ -124,13 +124,13 @@ class AddUniqueOperationTest extends TestCase
     {
         // test a null old value
         $objects = [
-            'key1'  => 'value1'
+            'key1' => 'value1'
         ];
         $addOp = new AddUniqueOperation($objects);
         $this->assertEquals($objects, $addOp->_apply(null, null, null));
 
         $addOp = new AddUniqueOperation([
-            'key'    => 'string'
+            'key' => 'string'
         ]);
         $oldValue = $addOp->_apply('string', null, null);
         $this->assertEquals(['string'], $oldValue);
@@ -138,7 +138,7 @@ class AddUniqueOperationTest extends TestCase
         // test saving an object
         $obj = new \DateTime();
         $addOp = new AddUniqueOperation([
-            'object'    => $obj
+            'object' => $obj
         ]);
         $oldValue = $addOp->_apply($obj, null, null);
         $this->assertEquals($obj, $oldValue[0]);
@@ -150,7 +150,7 @@ class AddUniqueOperationTest extends TestCase
 
         // test a saved parse object as the old value
         $addOp = new AddUniqueOperation([
-            'object'    => $obj1
+            'object' => $obj1
         ]);
         $oldValue = $addOp->_apply($obj1, null, null);
         $this->assertEquals($obj1, $oldValue[0]);

@@ -44,7 +44,7 @@ class ParseStream
     /**
      * Create a stream context
      *
-     * @param array $options  Options to pass to our context
+     * @param array $options Options to pass to our context
      */
     public function createContext($options)
     {
@@ -54,7 +54,7 @@ class ParseStream
     /**
      * Gets the contents from the given url
      *
-     * @param string $url   Url to get contents of
+     * @param string $url Url to get contents of
      * @return string
      */
     public function get($url)
@@ -63,11 +63,11 @@ class ParseStream
             // get our response
             $response = file_get_contents($url, false, $this->stream);
             $this->errorMessage = null;
-            $this->errorCode    = null;
+            $this->errorCode = null;
         } catch (\Exception $e) {
             // set our error message/code and return false
             $this->errorMessage = $e->getMessage();
-            $this->errorCode    = $e->getCode();
+            $this->errorCode = $e->getCode();
             return false;
         }
 

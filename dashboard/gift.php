@@ -2,19 +2,8 @@
 require '../vendor/autoload.php';
 include '../Configs.php';
 
-use Parse\ParseObject;
-use Parse\ParseQuery;
-use Parse\ParseACL;
-use Parse\ParsePush;
 use Parse\ParseUser;
-use Parse\ParseInstallation;
-use Parse\ParseException;
-use Parse\ParseAnalytics;
-use Parse\ParseFile;
-use Parse\ParseCloud;
-use Parse\ParseClient;
-use Parse\ParseSessionStorage;
-use Parse\ParseGeoPoint;
+
 //session_start();
 
 $currUser = ParseUser::getCurrentUser();
@@ -22,7 +11,7 @@ if (!$currUser) {
 
     header("Refresh:0; url=../index.php");
 
-} elseif ($currUser->get("role") !== "admin"){
+} elseif ($currUser->get("role") !== "admin") {
     // check if the current user is an admin
     header("Refresh:0; url=../auth/logout.php");
 
@@ -40,15 +29,15 @@ if (!$currUser) {
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/dashboard/images/favicon.png">
-    <title>Heyto Live | All Gifts</title>
+    <title>TrystMe - Admin | All Gifts</title>
     <!-- Bootstrap Core CSS -->
     <link href="../assets/dashboard/css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
 
     <link href="../assets/dashboard/css/lib/calendar2/semantic.ui.min.css" rel="stylesheet">
     <link href="../assets/dashboard/css/lib/calendar2/pignose.calendar.min.css" rel="stylesheet">
-    <link href="../assets/dashboard/css/lib/owl.carousel.min.css" rel="stylesheet" />
-    <link href="../assets/dashboard/css/lib/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="../assets/dashboard/css/lib/owl.carousel.min.css" rel="stylesheet"/>
+    <link href="../assets/dashboard/css/lib/owl.theme.default.min.css" rel="stylesheet"/>
     <link href="../assets/dashboard/css/helper.css" rel="stylesheet">
     <link href="../assets/dashboard/css/style.css" rel="stylesheet">
     <link href="../assets/dashboard/css/aliki.css" rel="stylesheet">
@@ -57,31 +46,32 @@ if (!$currUser) {
     <!--[if lt IE 9]>
     <script src="https:**oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https:**oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <![endif]-->
 </head>
 
 <body class="fix-header fix-sidebar">
-    <!-- Preloader - style you can find in spinners.css -->
-    <div class="preloader">
-        <svg class="circular" viewBox="25 25 50 50">
-			<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" ></circle> </svg>
-    </div>
-    <!-- Main wrapper  -->
-    <div id="main-wrapper">
+<!-- Preloader - style you can find in spinners.css -->
+<div class="preloader">
+    <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+    </svg>
+</div>
+<!-- Main wrapper  -->
+<div id="main-wrapper">
 
-        <?php
+    <?php
 
-        include '../admin/header_admin.php';
-        include '../admin/left_sidebar_admin.php';
-        include '../features/side_gift.php'; // Page wrapper
+    include '../admin/header_admin.php';
+    include '../admin/left_sidebar_admin.php';
+    include '../features/side_gift.php'; // Page wrapper
 
-        ?>
+    ?>
 
-        <!-- footer -->
-        <?php include 'footer.php' ?>
-        <!-- End footer -->
-    </div>
-    <!-- End Wrapper -->
+    <!-- footer -->
+    <?php include 'footer.php' ?>
+    <!-- End footer -->
+</div>
+<!-- End Wrapper -->
 
 
 </body>

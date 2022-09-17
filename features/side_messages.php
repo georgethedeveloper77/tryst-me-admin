@@ -1,22 +1,20 @@
 <?php
 
 require '../vendor/autoload.php';
+
 //include '../Configs.php';
 
 use Parse\ParseException;
 use Parse\ParseQuery;
 use Parse\ParseUser;
 
-
 //session_start();
 
 $currUser = ParseUser::getCurrentUser();
-if ($currUser){
-
+if ($currUser) {
     // Store current user session token, to restore in case we create new user
-    $_SESSION['token'] = $currUser -> getSessionToken();
+    $_SESSION['token'] = $currUser->getSessionToken();
 } else {
-
     header("Refresh:0; url=../index.php");
 }
 
@@ -26,7 +24,7 @@ if ($currUser){
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Messages</h3> </div>
+            <h3 class="text-primary">Messages</h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Features</a></li>
@@ -43,7 +41,7 @@ if ($currUser){
         </div>
         <div class="row">
             <div class="col-lg">
-               <div class="card">
+                <div class="card">
 
                     <?php
 
@@ -51,7 +49,7 @@ if ($currUser){
                     $query->doesNotExist('call');
                     $messagesCounter = $query->count(true);
 
-                    echo ' <h2 class="card-title">'.$messagesCounter.' Messages in total</h2> ';
+                    echo ' <h2 class="card-title">' . $messagesCounter . ' Messages in total</h2> ';
 
                     ?>
 
@@ -59,7 +57,8 @@ if ($currUser){
                     <div class="card-body">
                         <div class="table-responsive">
                             <!--<table class="table">-->
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                                   cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
                                     <th>ObjectId</th>
@@ -75,7 +74,6 @@ if ($currUser){
 
                                 <?php
                                 try {
-
                                     $currUser = ParseUser::getCurrentUser();
                                     $cuObjectID = $currUser->getObjectId();
 
@@ -91,31 +89,28 @@ if ($currUser){
                                         $cObj = $iValue;
 
                                         $objectId = $cObj->getObjectId();
-                                        $date= $cObj->getCreatedAt();
-                                        $created = date_format($date,"d/m/Y");
+                                        $date = $cObj->getCreatedAt();
+                                        $created = date_format($date, "d/m/Y");
 
                                         $fromName = $cObj->get('Author')->get('name');
                                         $toName = $cObj->get('Receiver')->get('name');
 
 
                                         $seen_status = $cObj->get('read');
-                                        if ($seen_status === true){
+                                        if ($seen_status === true) {
                                             $status_seen = "<span class=\"badge badge-success\">YES</span>";
-                                        } else{
+                                        } else {
                                             $status_seen = "<span class=\"badge badge-red\">NO</span>";
                                         }
 
                                         $typeFile = $cObj->get('isMessageFile');
-                                        if ($typeFile === true){
-
+                                        if ($typeFile === true) {
                                             $profilePhoto = $cObj->get("messageFile");
                                             $profilePhotoUrl = $profilePhoto->getURL();
 
                                             $fileFile = "<span class=\"badge badge-success\">YES</span>";
                                             $message = "<span/><a target='_blank' href=\"$profilePhotoUrl\" class=\"badge badge-info\">Download</a></span>";
-
-                                        } else{
-
+                                        } else {
                                             $fileFile = "<span class=\"badge badge-red\">NO</span>";
                                             $message = $cObj->get('message');
                                         }
@@ -123,26 +118,27 @@ if ($currUser){
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td>'.$created.'</td>
-                                    <td>'.$fromName.'</td>
-                                    <td>'.$toName.'</td>
-                                    <td>'.$message.'</td>
-                                    <td>'.$fileFile.'</td>
-                                    <td>'.$status_seen.'</td>
+                                    <td>' . $objectId . '</td>
+                                    <td>' . $created . '</td>
+                                    <td>' . $fromName . '</td>
+                                    <td>' . $toName . '</td>
+                                    <td>' . $message . '</td>
+                                    <td>' . $fileFile . '</td>
+                                    <td>' . $status_seen . '</td>
                                 </tr>
                                 
                                 ';
                                     }
                                     // error in query
-                                } catch (ParseException $e){ echo $e->getMessage(); }
+                                } catch (ParseException $e) {
+                                    echo $e->getMessage();
+                                }
                                 ?>
 
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
 
 
                 </div>

@@ -7,12 +7,11 @@ namespace Parse\Test;
 
 use Parse\ParseClient;
 use Parse\ParseServerInfo;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseServerInfoTest extends TestCase
 {
-    public function setup() : void
+    public function setup(): void
     {
         Helper::setHttpClient();
     }

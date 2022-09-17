@@ -6,7 +6,6 @@
 namespace Parse\Test;
 
 use Parse\ParseSessionStorage;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseSessionStorageAltTest extends TestCase

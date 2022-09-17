@@ -20,89 +20,83 @@ use Parse\Internal\Encodable;
 final class ParseClient
 {
     /**
+     * Constant for version string to include with requests. Currently 1.6.0.
+     *
+     * @var string
+     */
+    const VERSION_STRING = 'php1.6.0';
+    /**
      * The remote Parse Server to communicate with
      *
      * @var string
      */
     private static $serverURL = null;
-
     /**
      * The mount path for the current parse server
      *
      * @var string
      */
     private static $mountPath = null;
-
     /**
      * The application id.
      *
      * @var string
      */
     private static $applicationId;
-
     /**
      * The REST API Key.
      *
      * @var string|null
      */
     private static $restKey;
-
     /**
      * The Master Key.
      *
      * @var string
      */
     private static $masterKey;
-
     /**
      * Enable/Disable curl exceptions.
      *
      * @var bool
      */
     private static $enableCurlExceptions;
-
     /**
      * The account key.
      *
      * @var string
      */
     private static $accountKey;
-
     /**
      * The object for managing persistence.
      *
      * @var ParseStorageInterface
      */
     private static $storage;
-
     /**
      * Are revocable sessions enabled?
      *
      * @var bool
      */
     private static $forceRevocableSession = false;
-
     /**
      * Number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
      *
      * @var int
      */
     private static $connectionTimeout;
-
     /**
      * Maximum number of seconds of request/response operation.
      *
      * @var int
      */
     private static $timeout;
-
     /**
      * Http client for requests
      *
      * @var ParseHttpable
      */
     private static $httpClient;
-
     /**
      * CA file holding one or more certificates to verify a peer
      *
@@ -111,20 +105,13 @@ final class ParseClient
     private static $caFile;
 
     /**
-     * Constant for version string to include with requests. Currently 1.6.0.
-     *
-     * @var string
-     */
-    const VERSION_STRING = 'php1.6.0';
-
-    /**
      * Parse\Client::initialize, must be called before using Parse features.
      *
-     * @param string $app_id               Parse Application ID
-     * @param string $rest_key             Parse REST API Key
-     * @param string $master_key           Parse Master Key
-     * @param bool   $enableCurlExceptions Enable or disable Parse curl exceptions
-     * @param string $account_key          An account key from Parse.com can enable creating apps via API.
+     * @param string $app_id Parse Application ID
+     * @param string $rest_key Parse REST API Key
+     * @param string $master_key Parse Master Key
+     * @param bool $enableCurlExceptions Enable or disable Parse curl exceptions
+     * @param string $account_key An account key from Parse.com can enable creating apps via API.
      *
      * @throws Exception
      */
@@ -134,7 +121,8 @@ final class ParseClient
         $master_key,
         $enableCurlExceptions = true,
         $account_key = null
-    ) {
+    )
+    {
         if (!ParseObject::hasRegisteredSubclass('_User')) {
             ParseUser::registerSubclass();
         }
@@ -172,8 +160,8 @@ final class ParseClient
 
     /**
      * ParseClient::setServerURL, to change the Parse Server address & mount path for this app
-     * @param string $serverURL     The remote server url
-     * @param string $mountPath     The mount path for this server
+     * @param string $serverURL The remote server url
+     * @param string $mountPath The mount path for this server
      *
      * @throws \Exception
      *
@@ -216,16 +204,6 @@ final class ParseClient
     }
 
     /**
-     * Sets the Http client to use for requests
-     *
-     * @param ParseHttpable $httpClient Http client to use
-     */
-    public static function setHttpClient(ParseHttpable $httpClient)
-    {
-        self::$httpClient = $httpClient;
-    }
-
-    /**
      * Returns an array of information regarding the current server's health
      *
      * @return array
@@ -245,14 +223,14 @@ final class ParseClient
 
         if ($errorCode) {
             return [
-                'status'        => $httpClient->getResponseStatusCode(),
-                'error'         => $errorCode,
+                'status' => $httpClient->getResponseStatusCode(),
+                'error' => $errorCode,
                 'error_message' => $httpClient->getErrorMessage()
             ];
         }
 
         $status = [
-            'status'   => $httpClient->getResponseStatusCode(),
+            'status' => $httpClient->getResponseStatusCode(),
         ];
 
         // attempt to decode this response
@@ -265,7 +243,7 @@ final class ParseClient
             if ($response === 'OK') {
                 // implied status: ok!
                 $status['response'] = [
-                    'status'    => 'ok'
+                    'status' => 'ok'
                 ];
             } else {
                 // add plain response
@@ -274,6 +252,51 @@ final class ParseClient
         }
 
         return $status;
+    }
+
+    /**
+     * Asserts that the server and mount path have been initialized
+     *
+     * @throws Exception
+     */
+    private static function assertServerInitialized()
+    {
+        if (self::$serverURL === null) {
+            throw new Exception(
+                'Missing a valid server url. ' .
+                'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') ' .
+                ' before making any requests.'
+            );
+        }
+
+        if (self::$mountPath === null) {
+            throw new Exception(
+                'Missing a valid mount path. ' .
+                'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') ' .
+                ' before making any requests.'
+            );
+        }
+    }
+
+    /**
+     * Returns an httpClient prepared for use
+     *
+     * @return ParseHttpable
+     */
+    private static function getPreparedHttpClient()
+    {
+        // get our http client
+        $httpClient = self::getHttpClient();
+
+        // setup
+        $httpClient->setup();
+
+        if (isset(self::$caFile)) {
+            // set CA file
+            $httpClient->setCAFile(self::$caFile);
+        }
+
+        return $httpClient;
     }
 
     /**
@@ -293,6 +316,37 @@ final class ParseClient
     }
 
     /**
+     * Sets the Http client to use for requests
+     *
+     * @param ParseHttpable $httpClient Http client to use
+     */
+    public static function setHttpClient(ParseHttpable $httpClient)
+    {
+        self::$httpClient = $httpClient;
+    }
+
+    /**
+     * Sets a CA file to validate peers of our requests with
+     *
+     * @param string $caFile CA file to set
+     */
+    public static function setCAFile($caFile)
+    {
+        self::$caFile = $caFile;
+    }
+
+    /**
+     * Creates an absolute request url from a relative one
+     *
+     * @param string $relativeUrl Relative url to create full request url from
+     * @return string
+     */
+    private static function createRequestUrl($relativeUrl)
+    {
+        return self::$serverURL . '/' . self::$mountPath . ltrim($relativeUrl, '/');
+    }
+
+    /**
      * Clears the currently set http client
      */
     public static function clearHttpClient()
@@ -301,24 +355,14 @@ final class ParseClient
     }
 
     /**
-     * Sets a CA file to validate peers of our requests with
-     *
-     * @param string $caFile    CA file to set
-     */
-    public static function setCAFile($caFile)
-    {
-        self::$caFile = $caFile;
-    }
-
-    /**
      * ParseClient::_encode, internal method for encoding object values.
      *
-     * @param mixed $value             Value to encode
-     * @param bool  $allowParseObjects Allow nested objects
-     *
-     * @throws \Exception
+     * @param mixed $value Value to encode
+     * @param bool $allowParseObjects Allow nested objects
      *
      * @return mixed Encoded results.
+     * @throws \Exception
+     *
      */
     public static function _encode($value, $allowParseObjects)
     {
@@ -356,6 +400,43 @@ final class ParseClient
     }
 
     /**
+     * Get a date value in the format stored on Parse.
+     *
+     * All the SDKs do some slightly different date handling.
+     * PHP provides 6 digits for the microseconds (u) so we have to chop 3 off.
+     *
+     * @param \DateTime $value DateTime value to format.
+     *
+     * @return string
+     */
+    public static function getProperDateFormat($value)
+    {
+        $dateFormatString = 'Y-m-d\TH:i:s.u';
+        $date = date_format($value, $dateFormatString);
+        $date = substr($date, 0, -3) . 'Z';
+
+        return $date;
+    }
+
+    /**
+     * ParseClient::_encodeArray, internal method for encoding arrays.
+     *
+     * @param array $value Array to encode.
+     * @param bool $allowParseObjects Allow nested objects.
+     *
+     * @return array Encoded results.
+     */
+    public static function _encodeArray($value, $allowParseObjects)
+    {
+        $output = [];
+        foreach ($value as $key => $item) {
+            $output[$key] = self::_encode($item, $allowParseObjects);
+        }
+
+        return $output;
+    }
+
+    /**
      * ParseClient::_decode, internal method for decoding server responses.
      *
      * @param mixed $data The value to decode
@@ -367,7 +448,7 @@ final class ParseClient
         // The json decoded response from Parse will make JSONObjects into stdClass
         //     objects.    We'll change it to an associative array here.
         if ($data instanceof \stdClass) {
-            $tmp = (array) $data;
+            $tmp = (array)$data;
             if (!empty($tmp)) {
                 return self::_decode(get_object_vars($data));
             }
@@ -427,70 +508,20 @@ final class ParseClient
     }
 
     /**
-     * ParseClient::_encodeArray, internal method for encoding arrays.
-     *
-     * @param array $value             Array to encode.
-     * @param bool  $allowParseObjects Allow nested objects.
-     *
-     * @return array Encoded results.
-     */
-    public static function _encodeArray($value, $allowParseObjects)
-    {
-        $output = [];
-        foreach ($value as $key => $item) {
-            $output[$key] = self::_encode($item, $allowParseObjects);
-        }
-
-        return $output;
-    }
-
-    /**
-     * Returns an httpClient prepared for use
-     *
-     * @return ParseHttpable
-     */
-    private static function getPreparedHttpClient()
-    {
-        // get our http client
-        $httpClient = self::getHttpClient();
-
-        // setup
-        $httpClient->setup();
-
-        if (isset(self::$caFile)) {
-            // set CA file
-            $httpClient->setCAFile(self::$caFile);
-        }
-
-        return $httpClient;
-    }
-
-    /**
-     * Creates an absolute request url from a relative one
-     *
-     * @param string $relativeUrl   Relative url to create full request url from
-     * @return string
-     */
-    private static function createRequestUrl($relativeUrl)
-    {
-        return self::$serverURL . '/' . self::$mountPath.ltrim($relativeUrl, '/');
-    }
-
-    /**
      * Parse\Client::_request, internal method for communicating with Parse.
      *
-     * @param string $method        HTTP Method for this request.
-     * @param string $relativeUrl   REST API Path.
-     * @param null   $sessionToken  Session Token.
-     * @param null   $data          Data to provide with the request.
-     * @param bool   $useMasterKey  Whether to use the Master Key.
-     * @param bool   $appRequest    App request to create or modify a application
-     * @param string $contentType   The content type for this request, default is application/json
-     * @param bool   $returnHeaders Allow to return response headers
-     *
-     * @throws \Exception
+     * @param string $method HTTP Method for this request.
+     * @param string $relativeUrl REST API Path.
+     * @param null $sessionToken Session Token.
+     * @param null $data Data to provide with the request.
+     * @param bool $useMasterKey Whether to use the Master Key.
+     * @param bool $appRequest App request to create or modify a application
+     * @param string $contentType The content type for this request, default is application/json
+     * @param bool $returnHeaders Allow to return response headers
      *
      * @return mixed Result from Parse API Call.
+     * @throws \Exception
+     *
      */
     public static function _request(
         $method,
@@ -501,7 +532,8 @@ final class ParseClient
         $appRequest = false,
         $contentType = 'application/json',
         $returnHeaders = false
-    ) {
+    )
+    {
         if ($data === '[]') {
             $data = '{}';
         }
@@ -591,8 +623,8 @@ final class ParseClient
 
         if (!isset($decoded) && $response !== '') {
             throw new ParseException(
-                'Bad Request. Could not decode Response: '.
-                '('.json_last_error().') '.self::getLastJSONErrorMsg(),
+                'Bad Request. Could not decode Response: ' .
+                '(' . json_last_error() . ') ' . self::getLastJSONErrorMsg(),
                 -1
             );
         }
@@ -615,85 +647,17 @@ final class ParseClient
     }
 
     /**
-     * Returns the last error message from a failed json_decode call
-     *
-     * @return string
-     */
-    private static function getLastJSONErrorMsg()
-    {
-        // check if json_last_error_msg is defined (>= 5.5.0)
-        if (!function_exists('json_last_error_msg')) {
-            // return custom error messages for each code
-            $error_strings = array(
-                JSON_ERROR_NONE             => 'No error',
-                JSON_ERROR_DEPTH            => 'Maximum stack depth exceeded',
-                JSON_ERROR_STATE_MISMATCH   => 'State mismatch (invalid or malformed JSON)',
-                JSON_ERROR_CTRL_CHAR        => 'Control character error, potentially incorrectly encoded',
-                JSON_ERROR_SYNTAX           => 'Syntax error',
-                JSON_ERROR_UTF8             => 'Malformed UTF-8 characters, potentially incorrectly encoded'
-            );
-
-            $error = json_last_error();
-            return isset($error_strings[$error]) ? $error_strings[$error] : 'Unknown error';
-        }
-
-        // use existing function
-        return json_last_error_msg();
-    }
-
-    /**
-     * ParseClient::setStorage, will update the storage object used for
-     * persistence.
-     *
-     * @param ParseStorageInterface $storageObject
-     */
-    public static function setStorage(ParseStorageInterface $storageObject)
-    {
-        self::$storage = $storageObject;
-    }
-
-    /**
-     * ParseClient::getStorage, will return the storage object used for
-     * persistence.
-     *
-     * @return ParseStorageInterface
-     */
-    public static function getStorage()
-    {
-        return self::$storage;
-    }
-
-    /**
-     * ParseClient::_unsetStorage, will null the storage object.
-     *
-     * Without some ability to clear the storage objects, all test cases would
-     *     use the first assigned storage object.
-     */
-    public static function _unsetStorage()
-    {
-        self::$storage = null;
-    }
-
-    /**
-     * Asserts that the server and mount path have been initialized
+     * Asserts that the sdk has been initialized with a valid account key
      *
      * @throws Exception
      */
-    private static function assertServerInitialized()
+    private static function assertAppInitialized()
     {
-        if (self::$serverURL === null) {
+        if (self::$accountKey === null || empty(self::$accountKey)) {
             throw new Exception(
-                'Missing a valid server url. '.
-                'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') '.
-                ' before making any requests.'
-            );
-        }
-
-        if (self::$mountPath === null) {
-            throw new Exception(
-                'Missing a valid mount path. '.
-                'You must call ParseClient::setServerURL(\'https://your.parse-server.com\', \'/parse\') '.
-                ' before making any requests.'
+                'You must call ParseClient::initialize(..., $accountKey) before making any app requests. ' .
+                'Your account key must not be null or empty.',
+                109
             );
         }
     }
@@ -714,19 +678,84 @@ final class ParseClient
     }
 
     /**
-     * Asserts that the sdk has been initialized with a valid account key
+     * Sets number of seconds to wait while trying to connect. Use 0 to wait indefinitely, null to default behaviour.
      *
-     * @throws Exception
+     * @param int|null $connectionTimeout
      */
-    private static function assertAppInitialized()
+    public static function setConnectionTimeout($connectionTimeout)
     {
-        if (self::$accountKey === null || empty(self::$accountKey)) {
-            throw new Exception(
-                'You must call ParseClient::initialize(..., $accountKey) before making any app requests. '.
-                'Your account key must not be null or empty.',
-                109
+        self::$connectionTimeout = $connectionTimeout;
+    }
+
+    /**
+     * Sets maximum number of seconds of request/response operation.
+     * Use 0 to wait indefinitely, null to default behaviour.
+     *
+     * @param int|null $timeout
+     */
+    public static function setTimeout($timeout)
+    {
+        self::$timeout = $timeout;
+    }
+
+    /**
+     * Returns the last error message from a failed json_decode call
+     *
+     * @return string
+     */
+    private static function getLastJSONErrorMsg()
+    {
+        // check if json_last_error_msg is defined (>= 5.5.0)
+        if (!function_exists('json_last_error_msg')) {
+            // return custom error messages for each code
+            $error_strings = array(
+                JSON_ERROR_NONE => 'No error',
+                JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+                JSON_ERROR_STATE_MISMATCH => 'State mismatch (invalid or malformed JSON)',
+                JSON_ERROR_CTRL_CHAR => 'Control character error, potentially incorrectly encoded',
+                JSON_ERROR_SYNTAX => 'Syntax error',
+                JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, potentially incorrectly encoded'
             );
+
+            $error = json_last_error();
+            return isset($error_strings[$error]) ? $error_strings[$error] : 'Unknown error';
         }
+
+        // use existing function
+        return json_last_error_msg();
+    }
+
+    /**
+     * ParseClient::getStorage, will return the storage object used for
+     * persistence.
+     *
+     * @return ParseStorageInterface
+     */
+    public static function getStorage()
+    {
+        return self::$storage;
+    }
+
+    /**
+     * ParseClient::setStorage, will update the storage object used for
+     * persistence.
+     *
+     * @param ParseStorageInterface $storageObject
+     */
+    public static function setStorage(ParseStorageInterface $storageObject)
+    {
+        self::$storage = $storageObject;
+    }
+
+    /**
+     * ParseClient::_unsetStorage, will null the storage object.
+     *
+     * Without some ability to clear the storage objects, all test cases would
+     *     use the first assigned storage object.
+     */
+    public static function _unsetStorage()
+    {
+        self::$storage = null;
     }
 
     /**
@@ -736,7 +765,7 @@ final class ParseClient
      */
     public static function getAPIUrl()
     {
-        return self::$serverURL.'/'.self::$mountPath;
+        return self::$serverURL . '/' . self::$mountPath;
     }
 
     /**
@@ -750,32 +779,13 @@ final class ParseClient
     }
 
     /**
-     * Get a date value in the format stored on Parse.
-     *
-     * All the SDKs do some slightly different date handling.
-     * PHP provides 6 digits for the microseconds (u) so we have to chop 3 off.
-     *
-     * @param \DateTime $value DateTime value to format.
-     *
-     * @return string
-     */
-    public static function getProperDateFormat($value)
-    {
-        $dateFormatString = 'Y-m-d\TH:i:s.u';
-        $date = date_format($value, $dateFormatString);
-        $date = substr($date, 0, -3).'Z';
-
-        return $date;
-    }
-
-    /**
      * Get a date value in the format to use in Local Push Scheduling on Parse.
      *
      * All the SDKs do some slightly different date handling.
      * Format from Parse doc: an ISO 8601 date without a time zone, i.e. 2014-10-16T12:00:00 .
      *
      * @param \DateTime $value DateTime value to format.
-     * @param bool      $local Whether to return the local push time
+     * @param bool $local Whether to return the local push time
      *
      * @return string
      */
@@ -798,26 +808,5 @@ final class ParseClient
     public static function enableRevocableSessions()
     {
         self::$forceRevocableSession = true;
-    }
-
-    /**
-     * Sets number of seconds to wait while trying to connect. Use 0 to wait indefinitely, null to default behaviour.
-     *
-     * @param int|null $connectionTimeout
-     */
-    public static function setConnectionTimeout($connectionTimeout)
-    {
-        self::$connectionTimeout = $connectionTimeout;
-    }
-
-    /**
-     * Sets maximum number of seconds of request/response operation.
-     * Use 0 to wait indefinitely, null to default behaviour.
-     *
-     * @param int|null $timeout
-     */
-    public static function setTimeout($timeout)
-    {
-        self::$timeout = $timeout;
     }
 }

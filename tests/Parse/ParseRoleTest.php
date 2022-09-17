@@ -8,24 +8,23 @@ use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseRole;
 use Parse\ParseUser;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseRoleTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('_User');
         Helper::clearClass('_Role');
         Helper::clearClass('Things');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
     }
@@ -35,6 +34,15 @@ class ParseRoleTest extends TestCase
         $role = ParseRole::createRole('Admin', $this->aclPublic());
         $role->save();
         $this->assertNotNull($role->getObjectId(), 'Role should have objectId.');
+    }
+
+    public function aclPublic()
+    {
+        $acl = new ParseACL();
+        $acl->setPublicReadAccess(true);
+        $acl->setPublicWriteAccess(true);
+
+        return $acl;
     }
 
     public function testRoleWithoutACLFails()
@@ -122,6 +130,60 @@ class ParseRoleTest extends TestCase
         $query->get($eden['apple']->getObjectId());
     }
 
+    public function createEden()
+    {
+        $eden = [];
+        $eden['adam'] = $this->createUser('adam');
+        $eden['eve'] = $this->createUser('eve');
+        $eden['snake'] = $this->createUser('snake');
+        $eden['adam']->signUp();
+        $eden['eve']->signUp();
+        $eden['snake']->signUp();
+        $eden['humans'] = ParseRole::createRole('humans', $this->aclPublic());
+        $eden['humans']->getUsers()->add($eden['adam']);
+        $eden['humans']->getUsers()->add($eden['eve']);
+        $eden['creatures'] = ParseRole::createRole(
+            'creatures',
+            $this->aclPublic()
+        );
+        $eden['creatures']->getUsers()->add($eden['snake']);
+        ParseObject::saveAll([$eden['humans'], $eden['creatures']]);
+        $eden['edenkin'] = ParseRole::createRole('edenkin', $this->aclPublic());
+        $eden['edenkin']->getRoles()->add($eden['humans']);
+        $eden['edenkin']->getRoles()->add($eden['creatures']);
+        $eden['edenkin']->save();
+
+        $eden['apple'] = ParseObject::create('Things');
+        $eden['apple']->set('name', 'apple');
+        $eden['apple']->set('ACL', $this->aclPrivateTo($eden['humans']));
+
+        $eden['garden'] = ParseObject::create('Things');
+        $eden['garden']->set('name', 'garden');
+        $eden['garden']->set('ACL', $this->aclPrivateTo($eden['edenkin']));
+
+        ParseObject::saveAll([$eden['apple'], $eden['garden']]);
+
+        return $eden;
+    }
+
+    public function createUser($username)
+    {
+        $user = new ParseUser();
+        $user->setUsername($username);
+        $user->setPassword($username);
+
+        return $user;
+    }
+
+    public function aclPrivateTo($someone)
+    {
+        $acl = new ParseACL();
+        $acl->setReadAccess($someone, true);
+        $acl->setWriteAccess($someone, true);
+
+        return $acl;
+    }
+
     public function testRoleHierarchyAndPropagation()
     {
         $eden = $this->createEden();
@@ -187,69 +249,6 @@ class ParseRoleTest extends TestCase
         $users = $roleAgain->getUsers()->getQuery()->find();
         $this->assertEquals($user->getObjectId(), $users[0]->getObjectId());
         ParseUser::logOut();
-    }
-
-    public function aclPrivateTo($someone)
-    {
-        $acl = new ParseACL();
-        $acl->setReadAccess($someone, true);
-        $acl->setWriteAccess($someone, true);
-
-        return $acl;
-    }
-
-    public function aclPublic()
-    {
-        $acl = new ParseACL();
-        $acl->setPublicReadAccess(true);
-        $acl->setPublicWriteAccess(true);
-
-        return $acl;
-    }
-
-    public function createUser($username)
-    {
-        $user = new ParseUser();
-        $user->setUsername($username);
-        $user->setPassword($username);
-
-        return $user;
-    }
-
-    public function createEden()
-    {
-        $eden = [];
-        $eden['adam'] = $this->createUser('adam');
-        $eden['eve'] = $this->createUser('eve');
-        $eden['snake'] = $this->createUser('snake');
-        $eden['adam']->signUp();
-        $eden['eve']->signUp();
-        $eden['snake']->signUp();
-        $eden['humans'] = ParseRole::createRole('humans', $this->aclPublic());
-        $eden['humans']->getUsers()->add($eden['adam']);
-        $eden['humans']->getUsers()->add($eden['eve']);
-        $eden['creatures'] = ParseRole::createRole(
-            'creatures',
-            $this->aclPublic()
-        );
-        $eden['creatures']->getUsers()->add($eden['snake']);
-        ParseObject::saveAll([$eden['humans'], $eden['creatures']]);
-        $eden['edenkin'] = ParseRole::createRole('edenkin', $this->aclPublic());
-        $eden['edenkin']->getRoles()->add($eden['humans']);
-        $eden['edenkin']->getRoles()->add($eden['creatures']);
-        $eden['edenkin']->save();
-
-        $eden['apple'] = ParseObject::create('Things');
-        $eden['apple']->set('name', 'apple');
-        $eden['apple']->set('ACL', $this->aclPrivateTo($eden['humans']));
-
-        $eden['garden'] = ParseObject::create('Things');
-        $eden['garden']->set('name', 'garden');
-        $eden['garden']->set('ACL', $this->aclPrivateTo($eden['edenkin']));
-
-        ParseObject::saveAll([$eden['apple'], $eden['garden']]);
-
-        return $eden;
     }
 
     public function testSettingNonStringAsName()

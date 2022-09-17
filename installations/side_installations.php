@@ -8,7 +8,6 @@
 
 use Parse\ParseException;
 use Parse\ParseQuery;
-use Parse\ParseUser;
 
 ?>
 
@@ -16,7 +15,7 @@ use Parse\ParseUser;
     <!-- Bread crumb -->
     <div class="row page-titles">
         <div class="col-md-5 align-self-center">
-            <h3 class="text-primary">Control panel</h3> </div>
+            <h3 class="text-primary">Control panel</h3></div>
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
@@ -47,7 +46,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">Total Installations</p>
                         </div>
                         
@@ -73,7 +72,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">Web</p>
                         </div>
                         
@@ -99,7 +98,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">iOS</p>
                         </div>
                         
@@ -127,7 +126,7 @@ use Parse\ParseUser;
                         echo '
                         
                         <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
+                            <h2>' . $count . '</h2>
                             <p class="m-b-0">Android</p>
                         </div>
                         
@@ -145,21 +144,21 @@ use Parse\ParseUser;
                         </div>
 
                         <?php
-/*
-                        $query = new ParseQuery('_Installation');
-                        $query->equalTo('deviceType', 'web');
-                        $count = $query->count(true);
+            /*
+                                    $query = new ParseQuery('_Installation');
+                                    $query->equalTo('deviceType', 'web');
+                                    $count = $query->count(true);
 
-                        echo '
-                        
-                        <div class="media-body media-text-right">
-                            <h2>'.$count.'</h2>
-                            <p class="m-b-0">Web</p>
-                        </div>
-                        
-                        ';
+                                    echo '
 
-                        */?>
+                                    <div class="media-body media-text-right">
+                                        <h2>'.$count.'</h2>
+                                        <p class="m-b-0">Web</p>
+                                    </div>
+
+                                    ';
+
+                                    */ ?>
                     </div>
                 </div>
             </div>-->
@@ -192,8 +191,6 @@ use Parse\ParseUser;
 
                                 <?php
                                 try {
-
-
                                     $query = new ParseQuery('_Installation');
                                     $query->descending('createdAt');
                                     $query->includeKey('user');
@@ -204,16 +201,16 @@ use Parse\ParseUser;
 
                                         $objectId = $iValue->getObjectId();
 
-                                        $createdDate= $iValue->getCreatedAt();
+                                        $createdDate = $iValue->getCreatedAt();
 
-                                        $createdAt = date_format($createdDate,"d/m/Y");
+                                        $createdAt = date_format($createdDate, "d/m/Y");
 
                                         $device = $iValue->get('deviceType');
-                                        if ($device === 'android'){
+                                        if ($device === 'android') {
                                             $deviceType = "<span class=\"badge badge-success\">Android</span>";
-                                        } else if ($device === 'ios'){
+                                        } elseif ($device === 'ios') {
                                             $deviceType = "<span class=\"badge badge-dark\">iOS</span>";
-                                        } else if ($device === 'web'){
+                                        } elseif ($device === 'web') {
                                             $deviceType = "<span class=\"badge badge-primary\">Web</span>";
                                         } else {
                                             $deviceType = "<span class=\"badge badge-info\">$device</span>";
@@ -228,19 +225,21 @@ use Parse\ParseUser;
                                         echo '
 		            	
 		            	        <tr>
-                                    <td>'.$objectId.'</td>
-                                    <td><span>'.$createdAt.'</span></td>
-                                    <td><span>'.$deviceType.'</span></td>
-                                    <td><span>'.$local.'</span></td>
-                                    <td>'.$timeZone.'</td>
-                                    <td>'.$pushType.'</td>
-                                    <td>'.$appVersion.'</td>
+                                    <td>' . $objectId . '</td>
+                                    <td><span>' . $createdAt . '</span></td>
+                                    <td><span>' . $deviceType . '</span></td>
+                                    <td><span>' . $local . '</span></td>
+                                    <td>' . $timeZone . '</td>
+                                    <td>' . $pushType . '</td>
+                                    <td>' . $appVersion . '</td>
                                 </tr>
                                 
                                 ';
                                     }
                                     // error in query
-                                } catch (ParseException $e){ echo $e->getMessage(); }
+                                } catch (ParseException $e) {
+                                    echo $e->getMessage();
+                                }
                                 ?>
 
                                 </tbody>

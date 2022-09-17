@@ -1,4 +1,4 @@
-Parse.Cloud.define("bar", function(request, response) {
+Parse.Cloud.define("bar", function (request, response) {
     if (request.params.key2 === "value1") {
         response.success('Foo');
     } else {
@@ -6,7 +6,7 @@ Parse.Cloud.define("bar", function(request, response) {
     }
 });
 
-Parse.Cloud.define("foo", function(request, response) {
+Parse.Cloud.define("foo", function (request, response) {
     var key1 = request.params.key1;
     var key2 = request.params.key2;
     if (key1 === "value1" && key2
@@ -25,7 +25,7 @@ Parse.Cloud.define("foo", function(request, response) {
                     x: 3
                 }
             },
-            array:[
+            array: [
                 {
                     __type: 'Object',
                     className: 'Bar',
@@ -42,20 +42,20 @@ Parse.Cloud.define("foo", function(request, response) {
     }
 });
 
-Parse.Cloud.job('CloudJob1', function(request, response) {
-  response.success({
-    status: 'cloud job completed'
-  });
-});
-
-Parse.Cloud.job('CloudJob2', function(request, response) {
-  setTimeout(function() {
+Parse.Cloud.job('CloudJob1', function (request, response) {
     response.success({
-      status: 'cloud job completed'
-    })
-  }, 3000);
+        status: 'cloud job completed'
+    });
 });
 
-Parse.Cloud.job('CloudJobFailing', function(request, response) {
-  response.error('cloud job failed');
+Parse.Cloud.job('CloudJob2', function (request, response) {
+    setTimeout(function () {
+        response.success({
+            status: 'cloud job completed'
+        })
+    }, 3000);
+});
+
+Parse.Cloud.job('CloudJobFailing', function (request, response) {
+    response.error('cloud job failed');
 });

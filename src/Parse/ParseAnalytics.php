@@ -37,12 +37,12 @@ class ParseAnalytics
      *
      * There is a default limit of 4 dimensions per event tracked.
      *
-     * @param string $name       The name of the custom event
-     * @param array  $dimensions The dictionary of segment information
-     *
-     * @throws \Exception
+     * @param string $name The name of the custom event
+     * @param array $dimensions The dictionary of segment information
      *
      * @return mixed
+     * @throws \Exception
+     *
      */
     public static function track($name, $dimensions = [])
     {
@@ -60,7 +60,7 @@ class ParseAnalytics
 
         return ParseClient::_request(
             'POST',
-            'events/'.$name,
+            'events/' . $name,
             null,
             static::_toSaveJSON($dimensions)
         );
@@ -69,7 +69,7 @@ class ParseAnalytics
     /**
      * Encodes and returns the given data as a json object
      *
-     * @param array $data   Data to encode
+     * @param array $data Data to encode
      * @return string
      */
     public static function _toSaveJSON($data)

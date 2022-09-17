@@ -4,17 +4,16 @@ namespace Parse\Test;
 
 use Parse\ParseClient;
 use Parse\ParseInstallation;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseInstallationTest extends TestCase
 {
-    public function setup() : void
+    public function setup(): void
     {
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::clearClass(ParseInstallation::$parseClassName);
     }
@@ -86,22 +85,22 @@ class ParseInstallationTest extends TestCase
     public function testInstallation()
     {
         $installationId = '12345';
-        $deviceToken    = 'device-token';
-        $deviceType     = 'android';
-        $channels       = [
+        $deviceToken = 'device-token';
+        $deviceType = 'android';
+        $channels = [
             'one',
             'zwei',
             'tres'
         ];
-        $pushType       = 'a-push-type';
-        $GCMSenderId    = 'gcm-sender-id';
-        $timeZone       = 'Time/Zone';
+        $pushType = 'a-push-type';
+        $GCMSenderId = 'gcm-sender-id';
+        $timeZone = 'Time/Zone';
         $localeIdentifier = 'locale';
-        $badge          = 32;
-        $appVersion     = '1.0.0';
-        $appName        = 'Foo Bar App';
-        $appIdentifier  = 'foo-bar-app-id';
-        $parseVersion   = substr(ParseClient::VERSION_STRING, 3); // pull the version #
+        $badge = 32;
+        $appVersion = '1.0.0';
+        $appName = 'Foo Bar App';
+        $appIdentifier = 'foo-bar-app-id';
+        $parseVersion = substr(ParseClient::VERSION_STRING, 3); // pull the version #
 
         $installation = new ParseInstallation();
         $installation->set('installationId', $installationId);

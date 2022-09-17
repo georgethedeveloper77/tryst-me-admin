@@ -6,7 +6,6 @@
 namespace Parse\Test;
 
 use Parse\HttpClients\ParseStreamHttpClient;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseStreamHttpClientTest extends TestCase
@@ -35,7 +34,7 @@ class ParseStreamHttpClientTest extends TestCase
         $this->expectException(
             '\Parse\ParseException',
             'Url may not contain spaces for stream client: '
-            .$url
+            . $url
         );
 
         $client = new ParseStreamHttpClient();

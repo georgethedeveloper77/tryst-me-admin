@@ -16,8 +16,8 @@ interface ParseHttpable
     /**
      * Adds a header to this request
      *
-     * @param string $key       Header name
-     * @param string $value     Header value
+     * @param string $key Header name
+     * @param string $value Header value
      */
     public function addRequestHeader($key, $value);
 
@@ -45,21 +45,21 @@ interface ParseHttpable
     /**
      * Sets the connection timeout
      *
-     * @param int $timeout  Timeout to set
+     * @param int $timeout Timeout to set
      */
     public function setConnectionTimeout($timeout);
 
     /**
      * Sets the request timeout
      *
-     * @param int $timeout  Sets the timeout for the request
+     * @param int $timeout Sets the timeout for the request
      */
     public function setTimeout($timeout);
 
     /**
      * Sets the CA file to validate requests with
      *
-     * @param string $caFile    CA file to set
+     * @param string $caFile CA file to set
      */
     public function setCAFile($caFile);
 
@@ -80,14 +80,14 @@ interface ParseHttpable
     /**
      * Sets up our client before we make a request
      */
-    public function setup() : void;
+    public function setup(): void;
 
     /**
      * Sends an HTTP request
      *
-     * @param string $url       Url to send this request to
-     * @param string $method    Method to send this request via
-     * @param array $data       Data to send in this request
+     * @param string $url Url to send this request to
+     * @param string $method Method to send this request via
+     * @param array $data Data to send in this request
      * @return string
      */
     public function send($url, $method = 'GET', $data = array());

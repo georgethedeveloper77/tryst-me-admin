@@ -26,9 +26,9 @@ class DeleteOperation implements FieldOperation
     /**
      * Applies the current operation and returns the result.
      *
-     * @param mixed  $oldValue Value prior to this operation.
-     * @param mixed  $object   Unused for this operation type.
-     * @param string $key      Key to remove from the target object.
+     * @param mixed $oldValue Value prior to this operation.
+     * @param mixed $object Unused for this operation type.
+     * @param string $key Key to remove from the target object.
      *
      * @return null
      */

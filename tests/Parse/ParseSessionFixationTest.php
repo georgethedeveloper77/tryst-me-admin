@@ -1,16 +1,16 @@
 <?php
+
 namespace Parse\Test;
 
 use Parse\ParseClient;
-use Parse\ParseUser;
 use Parse\ParseSession;
-
+use Parse\ParseUser;
 use PHPUnit\Framework\TestCase;
 
 class ParseSessionFixationTest extends TestCase
 {
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::clearClass(ParseUser::$parseClassName);
         Helper::clearClass(ParseSession::$parseClassName);
@@ -29,17 +29,17 @@ class ParseSessionFixationTest extends TestCase
         Helper::setUp();
     }
 
-    public function tearDown() : void
+    public static function tearDownAfterClass(): void
+    {
+        session_destroy();
+    }
+
+    public function tearDown(): void
     {
         Helper::tearDown();
         Helper::clearClass(ParseUser::$parseClassName);
         Helper::clearClass(ParseSession::$parseClassName);
         ParseUser::logout();
-    }
-
-    public static function tearDownAfterClass() : void
-    {
-        session_destroy();
     }
 
     public function testCookieIdChangedForAnonymous()

@@ -107,8 +107,8 @@ class ParseGeoPoint implements Encodable
     public function _encode()
     {
         return [
-            '__type'    => 'GeoPoint',
-            'latitude'  => $this->latitude,
+            '__type' => 'GeoPoint',
+            'latitude' => $this->latitude,
             'longitude' => $this->longitude,
         ];
     }

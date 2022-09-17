@@ -6,7 +6,6 @@
 namespace Parse\Test;
 
 use Parse\HttpClients\ParseCurl;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseCurlTest extends TestCase

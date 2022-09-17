@@ -3,58 +3,28 @@
 namespace Parse\Test;
 
 use Parse\ParseACL;
+use Parse\ParseClient;
 use Parse\ParseException;
 use Parse\ParseObject;
 use Parse\ParseQuery;
 use Parse\ParseUser;
-use Parse\ParseClient;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseQueryTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('TestObject');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::tearDown();
-    }
-
-    /**
-     * This function used as a helper function in test functions to save objects.
-     *
-     * @param int      $numberOfObjects Number of objects you want to save.
-     * @param callable $callback        Function which takes int as a parameter.
-     *                                  and should return ParseObject.
-     */
-    public function saveObjects($numberOfObjects, $callback)
-    {
-        $allObjects = [];
-        for ($i = 0; $i < $numberOfObjects; ++$i) {
-            $allObjects[] = $callback($i);
-        }
-        ParseObject::saveAll($allObjects);
-    }
-
-    public function provideTestObjects($numberOfObjects)
-    {
-        $this->saveObjects(
-            $numberOfObjects,
-            function ($i) {
-                $obj = ParseObject::create('TestObject');
-                $obj->set('foo', 'bar'.$i);
-
-                return $obj;
-            }
-        );
     }
 
     public function testBasicQuery()
@@ -120,8 +90,37 @@ class ParseQueryTest extends TestCase
         $this->assertEquals(
             count($results),
             9,
-            'Did not find 9 objects, found '.count($results)
+            'Did not find 9 objects, found ' . count($results)
         );
+    }
+
+    public function provideTestObjects($numberOfObjects)
+    {
+        $this->saveObjects(
+            $numberOfObjects,
+            function ($i) {
+                $obj = ParseObject::create('TestObject');
+                $obj->set('foo', 'bar' . $i);
+
+                return $obj;
+            }
+        );
+    }
+
+    /**
+     * This function used as a helper function in test functions to save objects.
+     *
+     * @param int $numberOfObjects Number of objects you want to save.
+     * @param callable $callback Function which takes int as a parameter.
+     *                                  and should return ParseObject.
+     */
+    public function saveObjects($numberOfObjects, $callback)
+    {
+        $allObjects = [];
+        for ($i = 0; $i < $numberOfObjects; ++$i) {
+            $allObjects[] = $callback($i);
+        }
+        ParseObject::saveAll($allObjects);
     }
 
     public function testLessThan()
@@ -1006,22 +1005,6 @@ class ParseQueryTest extends TestCase
         }
     }
 
-    public function provideTestObjectsForQuery($numberOfObjects)
-    {
-        $this->saveObjects(
-            $numberOfObjects,
-            function ($i) {
-                $parent = ParseObject::create('ParentObject');
-                $child = ParseObject::create('ChildObject');
-                $child->set('x', $i);
-                $parent->set('x', 10 + $i);
-                $parent->set('child', $child);
-
-                return $parent;
-            }
-        );
-    }
-
     public function testMatchesQuery()
     {
         Helper::clearClass('ChildObject');
@@ -1045,6 +1028,22 @@ class ParseQueryTest extends TestCase
                 'Did not return the correct object.'
             );
         }
+    }
+
+    public function provideTestObjectsForQuery($numberOfObjects)
+    {
+        $this->saveObjects(
+            $numberOfObjects,
+            function ($i) {
+                $parent = ParseObject::create('ParentObject');
+                $child = ParseObject::create('ChildObject');
+                $child->set('x', $i);
+                $parent->set('x', 10 + $i);
+                $parent->set('child', $child);
+
+                return $parent;
+            }
+        );
     }
 
     public function testDoesNotMatchQuery()
@@ -1075,6 +1074,28 @@ class ParseQueryTest extends TestCase
                 'Did not return the correct object.'
             );
         }
+    }
+
+    public function testMatchesKeyInQuery()
+    {
+        $this->provideTestObjectsForKeyInQuery();
+        $subQuery = new ParseQuery('Restaurant');
+        $subQuery->greaterThan('ratings', 4);
+
+        $query = new ParseQuery('Person');
+        $query->matchesKeyInQuery('hometown', 'location', $subQuery);
+        $results = $query->find();
+
+        $this->assertEquals(
+            1,
+            count($results),
+            'Did not return correct number of objects.'
+        );
+        $this->assertEquals(
+            'Bob',
+            $results[0]->get('name'),
+            'Did not return the correct object.'
+        );
     }
 
     public function provideTestObjectsForKeyInQuery()
@@ -1109,28 +1130,6 @@ class ParseQueryTest extends TestCase
 
                 return $person;
             }
-        );
-    }
-
-    public function testMatchesKeyInQuery()
-    {
-        $this->provideTestObjectsForKeyInQuery();
-        $subQuery = new ParseQuery('Restaurant');
-        $subQuery->greaterThan('ratings', 4);
-
-        $query = new ParseQuery('Person');
-        $query->matchesKeyInQuery('hometown', 'location', $subQuery);
-        $results = $query->find();
-
-        $this->assertEquals(
-            1,
-            count($results),
-            'Did not return correct number of objects.'
-        );
-        $this->assertEquals(
-            'Bob',
-            $results[0]->get('name'),
-            'Did not return the correct object.'
         );
     }
 
@@ -1416,15 +1415,15 @@ class ParseQueryTest extends TestCase
     {
         Helper::clearClass('DateSet');
         $dates1 = [
-                new \DateTime('2013-02-01T00:00:00Z'),
-                new \DateTime('2013-02-02T00:00:00Z'),
-                new \DateTime('2013-02-03T00:00:00Z'),
-                new \DateTime('2013-02-04T00:00:00Z'),
+            new \DateTime('2013-02-01T00:00:00Z'),
+            new \DateTime('2013-02-02T00:00:00Z'),
+            new \DateTime('2013-02-03T00:00:00Z'),
+            new \DateTime('2013-02-04T00:00:00Z'),
         ];
         $dates2 = [
-                new \DateTime('2013-02-01T00:00:00Z'),
-                new \DateTime('2013-02-03T00:00:00Z'),
-                new \DateTime('2013-02-04T00:00:00Z'),
+            new \DateTime('2013-02-01T00:00:00Z'),
+            new \DateTime('2013-02-03T00:00:00Z'),
+            new \DateTime('2013-02-04T00:00:00Z'),
         ];
 
         $obj1 = ParseObject::create('DateSet');
@@ -1647,15 +1646,15 @@ class ParseQueryTest extends TestCase
 
     public function testStartsWith()
     {
-        $someAscii = "\\E' !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTU".
-                "VWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'";
+        $someAscii = "\\E' !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTU" .
+            "VWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'";
         $prefixes = ['zax', 'start', '', ''];
         $suffixes = ['qub', '', 'end', ''];
         $this->saveObjects(
             4,
             function ($i) use ($prefixes, $suffixes, $someAscii) {
                 $obj = ParseObject::create('TestObject');
-                $obj->set('myString', $prefixes[$i].$someAscii.$suffixes[$i]);
+                $obj->set('myString', $prefixes[$i] . $someAscii . $suffixes[$i]);
 
                 return $obj;
             }
@@ -1668,19 +1667,6 @@ class ParseQueryTest extends TestCase
             count($results),
             'Did not return correct number of objects.'
         );
-    }
-
-    public function provideTestObjectsForOrderBy()
-    {
-        Helper::clearClass('BoxedNumber');
-        $strings = ['a', 'b', 'c', 'd'];
-        $numbers = [3, 1, 3, 2];
-        for ($i = 0; $i < 4; ++$i) {
-            $obj = ParseObject::create('BoxedNumber');
-            $obj->set('string', $strings[$i]);
-            $obj->set('number', $numbers[$i]);
-            $obj->save();
-        }
     }
 
     public function testOrderByAscNumberThenDescString()
@@ -1706,6 +1692,19 @@ class ParseQueryTest extends TestCase
                 $results[$i]->get('string'),
                 'Did not return the correct object.'
             );
+        }
+    }
+
+    public function provideTestObjectsForOrderBy()
+    {
+        Helper::clearClass('BoxedNumber');
+        $strings = ['a', 'b', 'c', 'd'];
+        $numbers = [3, 1, 3, 2];
+        for ($i = 0; $i < 4; ++$i) {
+            $obj = ParseObject::create('BoxedNumber');
+            $obj->set('string', $strings[$i]);
+            $obj->set('number', $numbers[$i]);
+            $obj->save();
         }
     }
 
@@ -1826,7 +1825,7 @@ class ParseQueryTest extends TestCase
             $obj = ParseObject::create('TestObject');
             $obj->set('number', $num);
             $obj->save();
-            $objects[]  = $obj;
+            $objects[] = $obj;
             sleep(1);
         }
 
@@ -1863,7 +1862,7 @@ class ParseQueryTest extends TestCase
             $obj = ParseObject::create('TestObject');
             $obj->set('number', $num);
             $obj->save();
-            $objects[]  = $obj;
+            $objects[] = $obj;
             sleep(1);
         }
 
@@ -2390,26 +2389,6 @@ class ParseQueryTest extends TestCase
         );
     }
 
-    public function provideTimeTestObjects()
-    {
-        Helper::clearClass('TimeObject');
-        $items = [];
-        $this->saveObjects(
-            3,
-            function ($i) use (&$items) {
-                $timeObject = ParseObject::create('TimeObject');
-                $timeObject->set('name', 'item'.$i);
-                $timeObject->set('time', new \DateTime());
-                sleep(1);
-                $items[] = $timeObject;
-
-                return $timeObject;
-            }
-        );
-
-        return $items;
-    }
-
     public function testTimeEquality()
     {
         $items = $this->provideTimeTestObjects();
@@ -2422,6 +2401,26 @@ class ParseQueryTest extends TestCase
             'Did not return correct number of objects.'
         );
         $this->assertEquals('item1', $results[0]->get('name'));
+    }
+
+    public function provideTimeTestObjects()
+    {
+        Helper::clearClass('TimeObject');
+        $items = [];
+        $this->saveObjects(
+            3,
+            function ($i) use (&$items) {
+                $timeObject = ParseObject::create('TimeObject');
+                $timeObject->set('name', 'item' . $i);
+                $timeObject->set('time', new \DateTime());
+                sleep(1);
+                $items[] = $timeObject;
+
+                return $timeObject;
+            }
+        );
+
+        return $items;
     }
 
     public function testTimeLessThan()
@@ -2492,7 +2491,7 @@ class ParseQueryTest extends TestCase
         $obj->save();
 
         $query = new ParseQuery('TestObject');
-        $query->ascending(['country','name']);
+        $query->ascending(['country', 'name']);
         $results = $query->find();
 
         $this->assertEquals(3, count($results));
@@ -2603,13 +2602,13 @@ class ParseQueryTest extends TestCase
         $query = new ParseQuery('TestObject');
         $query->_setConditions([
             [
-                'key'  => 'value'
+                'key' => 'value'
             ]
         ]);
 
         $this->assertEquals([
             'where' => [
-                'key'   => 'value'
+                'key' => 'value'
             ]
         ], $query->_getOptions());
     }
@@ -2622,13 +2621,13 @@ class ParseQueryTest extends TestCase
         $query = new ParseQuery('TestObject');
         $query->equalTo('key', 'value');
         $query->notEqualTo('key2', 'value2');
-        $query->includeKey(['include1','include2']);
-        $query->excludeKey(['excludeMe','excludeMeToo']);
+        $query->includeKey(['include1', 'include2']);
+        $query->excludeKey(['excludeMe', 'excludeMeToo']);
         $query->readPreference('PRIMARY', 'SECONDARY', 'SECONDARY_PREFERRED');
         $query->contains('container', 'item');
         $query->addDescending('desc');
         $query->addAscending('asc');
-        $query->select(['select1','select2']);
+        $query->select(['select1', 'select2']);
         $query->skip(24);
 
         // sets count = 1 and limit = 0
@@ -2640,24 +2639,24 @@ class ParseQueryTest extends TestCase
 
         $this->assertEquals([
             'where' => [
-                'key'   => 'value',
-                'key2'  => [
-                    '$ne'   => 'value2',
+                'key' => 'value',
+                'key2' => [
+                    '$ne' => 'value2',
                 ],
                 'container' => [
-                    '$regex'    => '\Qitem\E'
+                    '$regex' => '\Qitem\E'
                 ]
             ],
-            'include'   => 'include1,include2',
-            'excludeKeys'   => 'excludeMe,excludeMeToo',
-            'keys'      => 'select1,select2',
-            'limit'     => 42,
-            'skip'      => 24,
-            'order'     => '-desc,asc',
-            'count'     => 1,
-            'readPreference'            => 'PRIMARY',
-            'includeReadPreference'     => 'SECONDARY',
-            'subqueryReadPreference'    => 'SECONDARY_PREFERRED',
+            'include' => 'include1,include2',
+            'excludeKeys' => 'excludeMe,excludeMeToo',
+            'keys' => 'select1,select2',
+            'limit' => 42,
+            'skip' => 24,
+            'order' => '-desc,asc',
+            'count' => 1,
+            'readPreference' => 'PRIMARY',
+            'includeReadPreference' => 'SECONDARY',
+            'subqueryReadPreference' => 'SECONDARY_PREFERRED',
         ], $conditions, 'Conditions were different than expected');
 
         $query2 = new ParseQuery('TestObject');
@@ -2693,7 +2692,7 @@ class ParseQueryTest extends TestCase
 
         $query = new ParseQuery('TestObject');
         $query->_setConditions([
-            'unrecognized'  => 1
+            'unrecognized' => 1
         ]);
     }
 }

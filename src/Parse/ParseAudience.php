@@ -5,6 +5,8 @@
 
 namespace Parse;
 
+use DateTime;
+
 /**
  * Class ParseAudience - Representation of Audience for tracking and sending push notifications
  *
@@ -23,7 +25,7 @@ class ParseAudience extends ParseObject
     /**
      * Create a new audience with name & query
      *
-     * @param string $name      Name of the audience to create
+     * @param string $name Name of the audience to create
      * @param ParseQuery $query Query to create audience with
      * @return ParseAudience
      */
@@ -38,21 +40,11 @@ class ParseAudience extends ParseObject
     /**
      * Sets the name of this audience
      *
-     * @param string $name  Name to set
+     * @param string $name Name to set
      */
     public function setName($name)
     {
         $this->set('name', $name);
-    }
-
-    /**
-     * Gets the name for this audience
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->get('name');
     }
 
     /**
@@ -63,6 +55,16 @@ class ParseAudience extends ParseObject
     public function setQuery($query)
     {
         $this->set('query', json_encode($query->_getOptions()));
+    }
+
+    /**
+     * Gets the name for this audience
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->get('name');
     }
 
     /**
@@ -80,7 +82,7 @@ class ParseAudience extends ParseObject
     /**
      * Gets when this Audience was last used
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getLastUsed()
     {

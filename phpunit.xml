@@ -13,7 +13,7 @@
         stopOnSkipped="false"
         stopOnIncomplete="false"
         verbose="false"
-        >
+>
     <testsuites>
         <testsuite name="parse-php-sdk">
             <directory suffix="Test.php">./tests</directory>

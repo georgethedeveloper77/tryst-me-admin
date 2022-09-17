@@ -5,22 +5,21 @@ namespace Parse\Test;
 use Parse\ParseBytes;
 use Parse\ParseObject;
 use Parse\ParseQuery;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseBytesTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         Helper::setUp();
     }
 
-    public function setup() : void
+    public function setup(): void
     {
         Helper::clearClass('BytesObject');
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Helper::clearClass('BytesObject');
         Helper::tearDown();

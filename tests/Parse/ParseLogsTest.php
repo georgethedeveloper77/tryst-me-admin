@@ -4,12 +4,11 @@ namespace Parse\Test;
 
 use Parse\ParseLogs;
 use Parse\ParseObject;
-
 use PHPUnit\Framework\TestCase;
 
 class ParseLogsTest extends TestCase
 {
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         // setup 15 log entries that we can reference
         $objs = [];
@@ -20,7 +19,7 @@ class ParseLogsTest extends TestCase
         ParseObject::saveAll($objs);
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         Helper::clearClass('TestObject');
     }
@@ -79,7 +78,7 @@ class ParseLogsTest extends TestCase
         $this->assertEquals(15, count($logs));
 
         $timestamp1 = $logs[0]['timestamp'];
-        $timestamp2 = $logs[count($logs)-1]['timestamp'];
+        $timestamp2 = $logs[count($logs) - 1]['timestamp'];
 
         $timestamp1 = preg_replace('/Z$/', '', $timestamp1);
         $timestamp2 = preg_replace('/Z$/', '', $timestamp2);

@@ -141,9 +141,9 @@ class ParseSchema
     /**
      * Get all the Schema data on Parse.
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function all()
     {
@@ -170,9 +170,9 @@ class ParseSchema
     /**
      * Get the Schema from Parse.
      *
+     * @return array
      * @throws ParseException
      *
-     * @return array
      */
     public function get()
     {
@@ -185,7 +185,7 @@ class ParseSchema
 
         $result = ParseClient::_request(
             'GET',
-            'schemas/'.$this->className,
+            'schemas/' . $this->className,
             $sessionToken,
             null,
             $this->useMasterKey
@@ -199,11 +199,23 @@ class ParseSchema
     }
 
     /**
-     * Create a new Schema on Parse.
+     * Assert if ClassName has filled.
      *
      * @throws \Exception
+     */
+    public function assertClassName()
+    {
+        if ($this->className === null) {
+            throw new Exception('You must set a Class Name before making any request.', 103);
+        }
+    }
+
+    /**
+     * Create a new Schema on Parse.
      *
      * @return array
+     * @throws \Exception
+     *
      */
     public function save()
     {
@@ -228,14 +240,14 @@ class ParseSchema
 
         $result = ParseClient::_request(
             'POST',
-            'schemas/'.$this->className,
+            'schemas/' . $this->className,
             $sessionToken,
             json_encode($schema),
             $this->useMasterKey
         );
 
         if (empty($result)) {
-            throw new Exception('Error on create Schema "'.$this->className.'"', 0);
+            throw new Exception('Error on create Schema "' . $this->className . '"', 0);
         }
 
         return $result;
@@ -244,9 +256,9 @@ class ParseSchema
     /**
      * Update a Schema from Parse.
      *
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
     public function update()
     {
@@ -267,14 +279,14 @@ class ParseSchema
 
         $result = ParseClient::_request(
             'PUT',
-            'schemas/'.$this->className,
+            'schemas/' . $this->className,
             $sessionToken,
             json_encode($schema),
             $this->useMasterKey
         );
 
         if (empty($result)) {
-            throw new Exception('Error on update Schema "'.$this->className.'"', 101);
+            throw new Exception('Error on update Schema "' . $this->className . '"', 101);
         }
 
         return $result;
@@ -292,14 +304,14 @@ class ParseSchema
 
         $result = ParseClient::_request(
             'DELETE',
-            'purge/'.$this->className,
+            'purge/' . $this->className,
             null,
             null,
             $this->useMasterKey
         );
 
         if (!empty($result)) {
-            throw new Exception('Error on purging all objects from schema "'.$this->className.'"');
+            throw new Exception('Error on purging all objects from schema "' . $this->className . '"');
         }
     }
 
@@ -307,9 +319,9 @@ class ParseSchema
      * Removing a Schema from Parse.
      * You can only remove a schema from your app if it is empty (has 0 objects).
      *
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
     public function delete()
     {
@@ -322,14 +334,14 @@ class ParseSchema
 
         $result = ParseClient::_request(
             'DELETE',
-            'schemas/'.$this->className,
+            'schemas/' . $this->className,
             $sessionToken,
             null,
             $this->useMasterKey
         );
 
         if (!empty($result)) {
-            throw new Exception('Error on delete Schema "'.$this->className.'"', 101);
+            throw new Exception('Error on delete Schema "' . $this->className . '"', 101);
         }
 
         return $result;
@@ -341,9 +353,9 @@ class ParseSchema
      * @param string $fieldName Name of the field that will be created on Parse
      * @param string $fieldType Can be a (String|Number|Boolean|Date|File|GeoPoint|Array|Object|Pointer|Relation)
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addField($fieldName = null, $fieldType = 'String')
     {
@@ -363,15 +375,39 @@ class ParseSchema
         return $this;
     }
 
-      /**
+    /**
+     * Assert types of fields.
+     *
+     * @param string $type
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function assertTypes($type = null)
+    {
+        if ($type !== self::$STRING &&
+            $type !== self::$NUMBER &&
+            $type !== self::$BOOLEAN &&
+            $type !== self::$DATE &&
+            $type !== self::$FILE &&
+            $type !== self::$GEO_POINT &&
+            $type !== self::$POLYGON &&
+            $type !== self::$ARRAY &&
+            $type !== self::$OBJECT &&
+            $type !== self::$POINTER &&
+            $type !== self::$RELATION) {
+            throw new InvalidArgumentException($type . ' is not a valid type.', 1);
+        }
+    }
+
+    /**
      * Adding an Index to Create / Update a Schema.
      *
      * @param string $indexName Name of the index that will be created on Parse
      * @param string $index Key / Value to be saved
      *
+     * @return ParseSchema indexes return self to create index on Parse
      * @throws \Exception
      *
-     * @return ParseSchema indexes return self to create index on Parse
      */
     public function addIndex($indexName, $index)
     {
@@ -393,9 +429,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field that will be created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addString($fieldName = null)
     {
@@ -415,9 +451,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addNumber($fieldName = null)
     {
@@ -437,9 +473,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addBoolean($fieldName = null)
     {
@@ -459,9 +495,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addDate($fieldName = null)
     {
@@ -481,9 +517,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addFile($fieldName = null)
     {
@@ -503,9 +539,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addGeoPoint($fieldName = null)
     {
@@ -525,9 +561,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addPolygon($fieldName = null)
     {
@@ -547,9 +583,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addArray($fieldName = null)
     {
@@ -569,9 +605,9 @@ class ParseSchema
      *
      * @param string $fieldName Name of the field will created on Parse
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addObject($fieldName = null)
     {
@@ -589,12 +625,12 @@ class ParseSchema
     /**
      * Adding Pointer Field.
      *
-     * @param string $fieldName   Name of the field will created on Parse
+     * @param string $fieldName Name of the field will created on Parse
      * @param string $targetClass Name of the target Pointer Class
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addPointer($fieldName = null, $targetClass = null)
     {
@@ -607,7 +643,7 @@ class ParseSchema
         }
 
         $this->fields[$fieldName] = [
-            'type'        => self::$POINTER,
+            'type' => self::$POINTER,
             'targetClass' => $targetClass,
         ];
 
@@ -617,12 +653,12 @@ class ParseSchema
     /**
      * Adding Relation Field.
      *
-     * @param string $fieldName   Name of the field will created on Parse
+     * @param string $fieldName Name of the field will created on Parse
      * @param string $targetClass Name of the target Pointer Class
      *
+     * @return ParseSchema fields return self to create field on Parse
      * @throws \Exception
      *
-     * @return ParseSchema fields return self to create field on Parse
      */
     public function addRelation($fieldName = null, $targetClass = null)
     {
@@ -635,7 +671,7 @@ class ParseSchema
         }
 
         $this->fields[$fieldName] = [
-            'type'        => self::$RELATION,
+            'type' => self::$RELATION,
             'targetClass' => $targetClass,
         ];
 
@@ -664,41 +700,5 @@ class ParseSchema
         $this->indexes[$indexName] = [
             '__op' => 'Delete',
         ];
-    }
-
-    /**
-     * Assert if ClassName has filled.
-     *
-     * @throws \Exception
-     */
-    public function assertClassName()
-    {
-        if ($this->className === null) {
-            throw new Exception('You must set a Class Name before making any request.', 103);
-        }
-    }
-
-    /**
-     * Assert types of fields.
-     *
-     * @param string $type
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function assertTypes($type = null)
-    {
-        if ($type !== self::$STRING &&
-            $type !== self::$NUMBER &&
-            $type !== self::$BOOLEAN &&
-            $type !== self::$DATE &&
-            $type !== self::$FILE &&
-            $type !== self::$GEO_POINT &&
-            $type !== self::$POLYGON &&
-            $type !== self::$ARRAY &&
-            $type !== self::$OBJECT &&
-            $type !== self::$POINTER &&
-            $type !== self::$RELATION) {
-            throw new InvalidArgumentException($type.' is not a valid type.', 1);
-        }
     }
 }
